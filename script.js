@@ -1,17 +1,17 @@
-// Connect HTML elements
+// ============Connect HTML elements==========
 const taskInput = document.getElementById("taskInput");
 const addBtn = document.getElementById("addBtn");
 const taskList = document.getElementById("taskList");
 
-// Task storage
+// ============Task storage===========
 let tasks = [];
 
-// Save tasks to localStorage
+// ============Save tasks to localStorage==========
 function saveTasks() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-// Load tasks from localStorage
+// ============Load tasks from localStorage============
 function loadTasks() {
   const savedTasks = localStorage.getItem("tasks");
 
@@ -21,17 +21,17 @@ function loadTasks() {
   }
 }
 
-// Add task to UI
+// =========Add task to UI==========
 function addTaskToList(taskText) {
   const li = document.createElement("li");
   li.textContent = taskText;
 
-  // Mark task as completed
+  // ========Mark task as completed===========
   li.addEventListener("click", function () {
     li.style.textDecoration = "line-through";
   });
 
-  // Delete task on right click
+  // =========Delete task on right click============
   li.addEventListener("contextmenu", function (e) {
     e.preventDefault();
     taskList.removeChild(li);
@@ -42,7 +42,7 @@ function addTaskToList(taskText) {
   taskList.appendChild(li);
 }
 
-// Button click event
+// =========Button click event===========
 addBtn.addEventListener("click", function () {
   const taskText = taskInput.value.trim();
 
@@ -58,5 +58,5 @@ addBtn.addEventListener("click", function () {
   taskInput.value = "";
 });
 
-// Load tasks when page starts
+// =========Load tasks when page starts===========
 loadTasks();
