@@ -52,8 +52,8 @@ todo-app/
 Clone the repository and open the project in your browser.
 
 ```bash
-git clone https://github.com/yourusername/todo-list.git
-cd todo-list
+git clone https://github.com/kenenisabeyan/todo-list-app.git
+cd todo-list-app
 open index.html
 ```
 
@@ -76,7 +76,6 @@ Tasks are automatically saved in **localStorage**, so they remain after refreshi
 
 - Edit existing tasks
 - Drag & drop task reordering
-- Dark / Light theme toggle
 - Task categories and filters
 - Due dates and reminders
 
@@ -87,7 +86,7 @@ Tasks are automatically saved in **localStorage**, so they remain after refreshi
 **Kenenisa Beyan**  
 Full Stack Developer  
 
-GitHub: https://github.com/yourusername
+GitHub: https://github.com/kenenisabeyan
 
 ---
 
