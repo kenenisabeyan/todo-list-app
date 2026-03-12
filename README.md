@@ -86,7 +86,7 @@ Tasks are automatically saved in **localStorage**, so they remain after refreshi
 **Kenenisa Beyan**  
 Full Stack Developer  
 
-GitHub: https://github.com/kenenisabeyan
+GitHub: https://github.com/kenenisabeyan/Calculator-App
 
 ---
 
