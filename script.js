@@ -54,7 +54,7 @@ function addTask() {
 function renderTasks() {
     taskList.innerHTML = '';
     if (tasks.length === 0) {
-        const empty = document.createElement('li');
+        const empty = document.createElement('div');
         empty.className = 'empty-state';
         empty.textContent = 'No tasks yet. Add one above!';
         taskList.appendChild(empty);
@@ -67,64 +67,60 @@ function renderTasks() {
 }
 
 function createTaskElement(task) {
-    const li = document.createElement('li');
-    li.className = 'task-item';
-    li.dataset.id = task.id;
+    const taskBlock = document.createElement('div');
+    taskBlock.className = 'task-block';
+    taskBlock.dataset.id = task.id;
 
-    // Top row: dash + task name + delete button
-    const topRow = document.createElement('div');
-    topRow.className = 'task-top-row';
+    // "## Task" subheading
+    const taskHeading = document.createElement('div');
+    taskHeading.className = 'task-heading';
+    taskHeading.textContent = '## Task';
 
-    const dash = document.createElement('span');
-    dash.className = 'dash';
-    dash.textContent = '-';
+    // Container for the task details (indented)
+    const details = document.createElement('div');
+    details.className = 'task-details';
 
-    const taskName = document.createElement('span');
-    taskName.className = 'task-name';
-    taskName.textContent = task.text;
+    // Line with dash and task name
+    const dashLine = document.createElement('div');
+    dashLine.className = 'dash-line';
+    dashLine.innerHTML = `<span class="dash">-</span> <span class="task-name">${task.text}</span>`;
 
-    const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'delete-btn';
-    deleteBtn.innerHTML = '×';
-    deleteBtn.setAttribute('aria-label', 'Delete task');
-
-    topRow.appendChild(dash);
-    topRow.appendChild(taskName);
-    topRow.appendChild(deleteBtn);
-
-    // Priority label (exactly as in image)
+    // Priority label
     const priorityLabel = document.createElement('div');
     priorityLabel.className = 'property-label';
     priorityLabel.textContent = 'Priority';
 
-    // Priority value (badge)
+    // Priority value
     const priorityValue = document.createElement('div');
-    priorityValue.className = `property-value priority-${task.priority.toLowerCase()}`;
+    priorityValue.className = 'property-value';
     priorityValue.textContent = task.priority;
 
-    // Status value (badge, no label)
+    // Status value
     const statusValue = document.createElement('div');
-    statusValue.className = `property-value status-${task.status.toLowerCase().replace(' ', '-')}`;
+    statusValue.className = 'property-value';
     statusValue.textContent = task.status;
 
-    li.appendChild(topRow);
-    li.appendChild(priorityLabel);
-    li.appendChild(priorityValue);
-    li.appendChild(statusValue);
+    details.appendChild(dashLine);
+    details.appendChild(priorityLabel);
+    details.appendChild(priorityValue);
+    details.appendChild(statusValue);
 
-    // Click on task (except delete) cycles status
-    li.addEventListener('click', (e) => {
-        if (e.target !== deleteBtn && !deleteBtn.contains(e.target)) {
-            cycleStatus(task.id);
-        }
+    taskBlock.appendChild(taskHeading);
+    taskBlock.appendChild(details);
+
+    // Left click anywhere on the block (except if it's the empty state) cycles status
+    taskBlock.addEventListener('click', (e) => {
+        // Do not trigger if clicking inside input areas (but there are none here)
+        cycleStatus(task.id);
     });
 
-    deleteBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
+    // Right click to delete (prevents default context menu)
+    taskBlock.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
         deleteTask(task.id);
     });
 
-    return li;
+    return taskBlock;
 }
 
 function cycleStatus(taskId) {

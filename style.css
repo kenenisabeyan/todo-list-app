@@ -115,9 +115,8 @@ select:focus {
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
-/* Task list */
+/* Task list container */
 #taskList {
-  list-style: none;
   max-height: 500px;
   overflow-y: auto;
   padding-right: 5px;
@@ -141,28 +140,42 @@ select:focus {
   background: #a0a0a0;
 }
 
-/* Task items */
-.task-item {
+/* Task block */
+.task-block {
+  margin-bottom: 20px;
+  padding: 10px;
   background: #f8f9fa;
-  margin-bottom: 15px;
-  padding: 15px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border: 2px solid transparent;
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
-.task-item:hover {
+.task-block:hover {
   border-color: #667eea;
-  transform: translateX(3px);
+  background: #f0f0f0;
 }
 
-.task-top-row {
+/* "## Task" heading */
+.task-heading {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 1rem;
+  margin-bottom: 5px;
+  letter-spacing: 0.5px;
+}
+
+/* Task details indented */
+.task-details {
+  margin-left: 20px;
+}
+
+/* Dash line */
+.dash-line {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 
 .dash {
@@ -172,43 +185,25 @@ select:focus {
 }
 
 .task-name {
-  flex: 1;
   font-weight: 600;
-  font-size: 1.1rem;
-  word-break: break-word;
+  font-size: 1rem;
+  color: #333;
 }
 
-.delete-btn {
-  background: none;
-  border: none;
-  color: #dc3545;
-  font-size: 1.8rem;
-  cursor: pointer;
-  padding: 0 5px;
-  transition: transform 0.2s;
-  line-height: 1;
-}
-
-.delete-btn:hover {
-  transform: scale(1.2);
-  color: #c82333;
-}
-
-/* Property lines - plain text as in image */
+/* Property lines */
 .property-label {
-  margin-left: 20px;
   color: #666;
   font-size: 0.9rem;
   font-weight: 500;
+  margin-top: 5px;
   margin-bottom: 2px;
 }
 
 .property-value {
-  margin-left: 20px;
   font-size: 0.9rem;
   font-weight: 400;
   color: #333;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 /* Empty state */
@@ -292,12 +287,7 @@ select:focus {
     width: 100%;
   }
 
-  .task-item {
-    padding: 12px;
-  }
-
-  .property-label,
-  .property-value {
-    margin-left: 15px;
+  .task-details {
+    margin-left: 10px;
   }
 }
