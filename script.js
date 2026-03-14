@@ -92,19 +92,25 @@ function createTaskElement(task) {
     topRow.appendChild(taskName);
     topRow.appendChild(deleteBtn);
 
-    // Priority line
-    const priorityLine = document.createElement('div');
-    priorityLine.className = 'task-priority';
-    priorityLine.innerHTML = `<span class="label">Priority</span> <span class="value ${task.priority.toLowerCase()}">${task.priority}</span>`;
+    // Priority label (exactly as in image)
+    const priorityLabel = document.createElement('div');
+    priorityLabel.className = 'property-label';
+    priorityLabel.textContent = 'Priority';
 
-    // Status line
-    const statusLine = document.createElement('div');
-    statusLine.className = 'task-status';
-    statusLine.innerHTML = `<span class="label">Status</span> <span class="value ${task.status.toLowerCase().replace(' ', '-')}">${task.status}</span>`;
+    // Priority value (badge)
+    const priorityValue = document.createElement('div');
+    priorityValue.className = `property-value priority-${task.priority.toLowerCase()}`;
+    priorityValue.textContent = task.priority;
+
+    // Status value (badge, no label)
+    const statusValue = document.createElement('div');
+    statusValue.className = `property-value status-${task.status.toLowerCase().replace(' ', '-')}`;
+    statusValue.textContent = task.status;
 
     li.appendChild(topRow);
-    li.appendChild(priorityLine);
-    li.appendChild(statusLine);
+    li.appendChild(priorityLabel);
+    li.appendChild(priorityValue);
+    li.appendChild(statusValue);
 
     // Click on task (except delete) cycles status
     li.addEventListener('click', (e) => {
@@ -149,5 +155,3 @@ function showAlert(msg) {
         alert.remove();
     }, 2000);
 }
-
-// Shake animation (already in CSS)
