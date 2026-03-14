@@ -3,6 +3,8 @@ let tasks = [];
 
 // DOM elements
 const taskInput = document.getElementById('taskInput');
+const prioritySelect = document.getElementById('prioritySelect');
+const statusSelect = document.getElementById('statusSelect');
 const addTaskBtn = document.getElementById('addTaskBtn');
 const taskList = document.getElementById('taskList');
 
@@ -35,7 +37,6 @@ function saveTasks() {
 function addTask() {
     const taskText = taskInput.value.trim();
     
-    // Check for empty task
     if (taskText === '') {
         showAlert('Please enter a task!');
         taskInput.classList.add('shake');
@@ -43,34 +44,29 @@ function addTask() {
         return;
     }
     
-    // Create new task object
     const newTask = {
         id: Date.now().toString(),
         text: taskText,
-        completed: false
+        priority: prioritySelect.value,
+        status: statusSelect.value
     };
     
-    // Add to tasks array
     tasks.push(newTask);
-    
-    // Save to localStorage
     saveTasks();
-    
-    // Render tasks
     renderTasks();
     
-    // Clear input field
+    // Clear input but keep selections at defaults
     taskInput.value = '';
+    prioritySelect.value = 'Medium';
+    statusSelect.value = 'To Do';
     taskInput.focus();
 }
 
 // Function to render tasks
 function renderTasks() {
-    // Clear the task list
     taskList.innerHTML = '';
     
     if (tasks.length === 0) {
-        // Show empty state
         const emptyMessage = document.createElement('li');
         emptyMessage.className = 'empty-state';
         emptyMessage.textContent = 'No tasks yet. Add one above!';
@@ -78,14 +74,8 @@ function renderTasks() {
         return;
     }
     
-    // Sort tasks: incomplete first, then completed
-    const sortedTasks = [...tasks].sort((a, b) => {
-        if (a.completed === b.completed) return 0;
-        return a.completed ? 1 : -1;
-    });
-    
-    // Create task elements
-    sortedTasks.forEach(task => {
+    // Optionally sort by status or priority – here we keep original order
+    tasks.forEach(task => {
         const taskItem = createTaskElement(task);
         taskList.appendChild(taskItem);
     });
@@ -94,7 +84,7 @@ function renderTasks() {
 // Function to create a task element
 function createTaskElement(task) {
     const li = document.createElement('li');
-    li.className = `task-item ${task.completed ? 'completed' : ''}`;
+    li.className = 'task-item';
     li.dataset.id = task.id;
     
     // Task text
@@ -102,43 +92,56 @@ function createTaskElement(task) {
     taskText.className = 'task-text';
     taskText.textContent = task.text;
     
+    // Priority badge
+    const priorityBadge = document.createElement('span');
+    priorityBadge.className = `priority-badge ${task.priority.toLowerCase()}`;
+    priorityBadge.textContent = task.priority;
+    
+    // Status badge
+    const statusBadge = document.createElement('span');
+    statusBadge.className = `status-badge ${task.status.toLowerCase().replace(' ', '-')}`;
+    statusBadge.textContent = task.status;
+    
     // Delete button
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
-    deleteBtn.innerHTML = '×'; // Multiplication sign as X
+    deleteBtn.innerHTML = '×';
     deleteBtn.setAttribute('aria-label', 'Delete task');
     
-    // Event: Left click to toggle completion
+    // Container for badges and delete button
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'task-actions';
+    actionsDiv.appendChild(priorityBadge);
+    actionsDiv.appendChild(statusBadge);
+    actionsDiv.appendChild(deleteBtn);
+    
+    li.appendChild(taskText);
+    li.appendChild(actionsDiv);
+    
+    // Event: Click on task (but not on delete button) to cycle status
     li.addEventListener('click', (e) => {
-        // Prevent triggering when clicking delete button
-        if (e.target !== deleteBtn) {
-            toggleTaskCompletion(task.id);
+        if (e.target !== deleteBtn && !deleteBtn.contains(e.target)) {
+            cycleStatus(task.id);
         }
     });
     
-    // Event: Right click to delete (context menu)
-    li.addEventListener('contextmenu', (e) => {
-        e.preventDefault(); // Prevent default context menu
-        deleteTask(task.id);
-    });
-    
-    // Event: Click on delete button
+    // Event: Delete button
     deleteBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent triggering li click
+        e.stopPropagation();
         deleteTask(task.id);
     });
-    
-    li.appendChild(taskText);
-    li.appendChild(deleteBtn);
     
     return li;
 }
 
-// Function to toggle task completion
-function toggleTaskCompletion(taskId) {
+// Function to cycle status: To Do -> In Progress -> Done -> To Do
+function cycleStatus(taskId) {
     const task = tasks.find(t => t.id === taskId);
     if (task) {
-        task.completed = !task.completed;
+        const statuses = ['To Do', 'In Progress', 'Done'];
+        const currentIndex = statuses.indexOf(task.status);
+        const nextIndex = (currentIndex + 1) % statuses.length;
+        task.status = statuses[nextIndex];
         saveTasks();
         renderTasks();
     }
@@ -146,7 +149,6 @@ function toggleTaskCompletion(taskId) {
 
 // Function to delete a task
 function deleteTask(taskId) {
-    // Show confirmation dialog (optional)
     if (confirm('Are you sure you want to delete this task?')) {
         tasks = tasks.filter(task => task.id !== taskId);
         saveTasks();
@@ -156,7 +158,6 @@ function deleteTask(taskId) {
 
 // Function to show alert message
 function showAlert(message) {
-    // Create alert element
     const alert = document.createElement('div');
     alert.className = 'alert';
     alert.textContent = message;
@@ -176,7 +177,6 @@ function showAlert(message) {
     
     document.body.appendChild(alert);
     
-    // Remove alert after 2 seconds
     setTimeout(() => {
         alert.style.animation = 'slideUp 0.3s ease';
         setTimeout(() => {
@@ -185,63 +185,16 @@ function showAlert(message) {
     }, 2000);
 }
 
-// Add animation styles for alerts
+// Add animation styles for alerts (already in CSS, but keep for safety)
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideDown {
-        from {
-            top: -100px;
-            opacity: 0;
-        }
-        to {
-            top: 20px;
-            opacity: 1;
-        }
+        from { top: -100px; opacity: 0; }
+        to { top: 20px; opacity: 1; }
     }
-    
     @keyframes slideUp {
-        from {
-            top: 20px;
-            opacity: 1;
-        }
-        to {
-            top: -100px;
-            opacity: 0;
-        }
+        from { top: 20px; opacity: 1; }
+        to { top: -100px; opacity: 0; }
     }
 `;
 document.head.appendChild(style);
-
-// Optional: Add task count
-function updateTaskCount() {
-    const totalTasks = tasks.length;
-    const completedTasks = tasks.filter(t => t.completed).length;
-    
-    // Create or update task counter
-    let counter = document.querySelector('.task-counter');
-    if (!counter) {
-        counter = document.createElement('div');
-        counter.className = 'task-counter';
-        counter.style.cssText = `
-            margin-top: 15px;
-            text-align: center;
-            color: #666;
-            font-size: 0.9rem;
-        `;
-        taskList.parentNode.insertBefore(counter, taskList.nextSibling);
-    }
-    
-    counter.textContent = `${completedTasks}/${totalTasks} tasks completed`;
-}
-
-// Modify renderTasks to include task count
-const originalRenderTasks = renderTasks;
-renderTasks = function() {
-    originalRenderTasks();
-    if (tasks.length > 0) {
-        updateTaskCount();
-    } else {
-        const counter = document.querySelector('.task-counter');
-        if (counter) counter.remove();
-    }
-};
