@@ -1,46 +1,164 @@
-const taskList = document.getElementById("taskList");
-const addBtn = document.getElementById("addBtn");
+const taskInput = document.getElementById("taskInput")
+const prioritySelect = document.getElementById("prioritySelect")
+const statusSelect = document.getElementById("statusSelect")
+const addBtn = document.getElementById("addTaskBtn")
+const taskList = document.getElementById("taskList")
+const filters = document.querySelectorAll(".filter")
 
-addBtn.addEventListener("click", () => {
+let tasks = JSON.parse(localStorage.getItem("tasks")) || []
+let currentFilter = "All"
 
-    const taskName = prompt("Enter task name:");
-    const priority = prompt("Priority: high / medium / low");
-    const status = prompt("Status: To Do / In Progress / Done");
 
-    if(!taskName) return;
+function saveTasks(){
+localStorage.setItem("tasks", JSON.stringify(tasks))
+}
 
-    const task = document.createElement("div");
-    task.className = "task";
 
-    task.innerHTML = `
-        <div class="task-info">
-            <div class="task-title">${taskName}</div>
-            <div>
-                <span class="priority ${priority.toLowerCase()}">
-                    ${priority}
-                </span>
-                <span class="status">${status}</span>
-            </div>
-        </div>
+function renderTasks(){
 
-        <div class="actions">
-            <input type="checkbox">
-            <button class="edit">✏️</button>
-            <button class="delete">🗑️</button>
-        </div>
-    `;
+taskList.innerHTML=""
 
-    taskList.appendChild(task);
+tasks
+.filter(task=>{
+if(currentFilter==="All") return true
+return task.status===currentFilter
+})
+.forEach((task,index)=>{
 
-    // delete
-    task.querySelector(".delete").onclick = () =>{
-        task.remove();
-    }
+const div = document.createElement("div")
+div.className="task"
+div.draggable=true
 
-    // edit
-    task.querySelector(".edit").onclick = () =>{
-        const newTask = prompt("Edit task", taskName);
-        if(newTask) task.querySelector(".task-title").textContent = newTask;
-    }
+div.innerHTML=`
 
-});
+<div class="task-left">
+
+<div class="task-title">${task.text}</div>
+
+<div>
+
+<span class="priority ${task.priority.toLowerCase()}">
+${task.priority}
+</span>
+
+<span class="status">${task.status}</span>
+
+</div>
+
+</div>
+
+<div class="task-right">
+
+<div class="checkbox ${task.done ? "completed" : ""}"></div>
+
+<i class="fa-solid fa-pen edit"></i>
+
+<i class="fa-solid fa-trash delete"></i>
+
+</div>
+
+`
+
+taskList.appendChild(div)
+
+
+div.querySelector(".delete").onclick=()=>{
+tasks.splice(index,1)
+saveTasks()
+renderTasks()
+}
+
+
+div.querySelector(".checkbox").onclick=()=>{
+tasks[index].done=!tasks[index].done
+saveTasks()
+renderTasks()
+}
+
+
+div.querySelector(".edit").onclick=()=>{
+const newText=prompt("Edit task",task.text)
+if(newText){
+tasks[index].text=newText
+saveTasks()
+renderTasks()
+}
+}
+
+
+div.addEventListener("dragstart",()=>{
+div.classList.add("dragging")
+})
+
+
+div.addEventListener("dragend",()=>{
+div.classList.remove("dragging")
+})
+
+})
+
+
+}
+
+
+
+taskList.addEventListener("dragover",(e)=>{
+
+e.preventDefault()
+
+const dragging=document.querySelector(".dragging")
+
+const siblings=[...taskList.querySelectorAll(".task:not(.dragging)")]
+
+let nextSibling=siblings.find(sibling=>{
+return e.clientY <= sibling.offsetTop + sibling.offsetHeight/2
+})
+
+taskList.insertBefore(dragging,nextSibling)
+
+})
+
+
+
+addBtn.onclick=()=>{
+
+const text=taskInput.value.trim()
+
+if(text==="") return
+
+tasks.push({
+text,
+priority:prioritySelect.value,
+status:statusSelect.value,
+done:false
+})
+
+taskInput.value=""
+
+saveTasks()
+
+renderTasks()
+
+}
+
+
+
+filters.forEach(btn=>{
+
+btn.onclick=()=>{
+
+document.querySelector(".active").classList.remove("active")
+
+btn.classList.add("active")
+
+currentFilter=btn.dataset.filter
+
+renderTasks()
+
+}
+
+})
+
+
+
+renderTasks()
