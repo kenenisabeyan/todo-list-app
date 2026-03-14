@@ -194,10 +194,9 @@ select:focus {
   color: #c82333;
 }
 
-/* Property lines */
+/* Property lines - plain text as in image */
 .property-label {
   margin-left: 20px;
-  /* indent under task name */
   color: #666;
   font-size: 0.9rem;
   font-weight: 500;
@@ -206,43 +205,10 @@ select:focus {
 
 .property-value {
   margin-left: 20px;
-  display: inline-block;
-  /* so background wraps content */
-  padding: 4px 12px;
-  border-radius: 20px;
   font-size: 0.9rem;
-  font-weight: 600;
-  color: white;
+  font-weight: 400;
+  color: #333;
   margin-bottom: 6px;
-}
-
-/* Priority colors */
-.priority-high {
-  background: #ef4444;
-}
-
-.priority-medium {
-  background: #f59e0b;
-}
-
-.priority-low {
-  background: #10b981;
-}
-
-/* Status colors */
-.status-to-do {
-  background: #e2e8f0;
-  color: #475569;
-}
-
-.status-in-progress {
-  background: #bfdbfe;
-  color: #1e40af;
-}
-
-.status-done {
-  background: #d1fae5;
-  color: #065f46;
 }
 
 /* Empty state */
