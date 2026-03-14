@@ -194,59 +194,53 @@ select:focus {
   color: #c82333;
 }
 
-/* Priority and status lines */
-.task-priority,
-.task-status {
-  display: flex;
-  align-items: center;
+/* Property lines */
+.property-label {
   margin-left: 20px;
-  /* indent under the task name */
-  font-size: 0.95rem;
-  padding: 2px 0;
-}
-
-.label {
-  width: 70px;
+  /* indent under task name */
   color: #666;
+  font-size: 0.9rem;
   font-weight: 500;
+  margin-bottom: 2px;
 }
 
-.value {
-  font-weight: 600;
-  padding: 2px 8px;
+.property-value {
+  margin-left: 20px;
+  display: inline-block;
+  /* so background wraps content */
+  padding: 4px 12px;
   border-radius: 20px;
-  background: #e2e8f0;
-  color: #1e293b;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 6px;
 }
 
 /* Priority colors */
-.value.high {
+.priority-high {
   background: #ef4444;
-  color: white;
 }
 
-.value.medium {
+.priority-medium {
   background: #f59e0b;
-  color: white;
 }
 
-.value.low {
+.priority-low {
   background: #10b981;
-  color: white;
 }
 
 /* Status colors */
-.value.to-do {
+.status-to-do {
   background: #e2e8f0;
   color: #475569;
 }
 
-.value.in-progress {
+.status-in-progress {
   background: #bfdbfe;
   color: #1e40af;
 }
 
-.value.done {
+.status-done {
   background: #d1fae5;
   color: #065f46;
 }
@@ -336,7 +330,8 @@ select:focus {
     padding: 12px;
   }
 
-  .label {
-    width: 60px;
+  .property-label,
+  .property-value {
+    margin-left: 15px;
   }
 }
