@@ -5,35 +5,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Task List</title>
+
   <link rel="stylesheet" href="style.css">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body>
+
   <div class="container">
-    <h1>Task List</h1>
+
+    <div class="header">
+      <h1>Task List</h1>
+    </div>
 
     <div class="input-section">
-      <input type="text" id="taskInput" placeholder="Enter a task..." autocomplete="off">
+
+      <input type="text" id="taskInput" placeholder="Enter a task...">
+
       <select id="prioritySelect">
         <option value="High">High</option>
         <option value="Medium" selected>Medium</option>
         <option value="Low">Low</option>
       </select>
+
       <select id="statusSelect">
         <option value="To Do">To Do</option>
         <option value="In Progress">In Progress</option>
         <option value="Done">Done</option>
       </select>
+
       <button id="addTaskBtn">+ Add Task</button>
+
     </div>
 
-    <div id="taskList"></div> <!-- changed from <ul> to <div> for more flexible structure -->
+    <div id="taskList"></div>
+
   </div>
 
   <script src="script.js"></script>
+
 </body>
 
 </html>
