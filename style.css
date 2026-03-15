@@ -10,18 +10,45 @@ body {
   display: flex;
   justify-content: center;
   padding: 40px;
+  transition: 0.3s;
+}
+
+body.dark {
+  background: #1e1e2f;
+  color: white;
 }
 
 .container {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1100px;
 }
 
-h1 {
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
 }
 
-/* INPUT SECTION */
+#darkModeBtn {
+  background: #6c4cff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.search-section {
+  margin-bottom: 15px;
+}
+
+.search-section input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
 
 .input-section {
 
@@ -49,8 +76,6 @@ button {
   cursor: pointer;
 }
 
-/* PROGRESS */
-
 .progress-section {
   margin-bottom: 20px;
 }
@@ -70,8 +95,6 @@ button {
   transition: 0.3s;
 }
 
-/* TABLE */
-
 table {
   width: 100%;
   border-collapse: collapse;
@@ -80,23 +103,20 @@ table {
   overflow: hidden;
 }
 
+body.dark table {
+  background: #2a2a3d;
+}
+
 th {
   background: #6c4cff;
   color: white;
   padding: 12px;
-  text-align: left;
 }
 
 td {
   padding: 12px;
   border-bottom: 1px solid #eee;
 }
-
-tr:hover {
-  background: #f8f8ff;
-}
-
-/* PRIORITY COLORS */
 
 .priority {
   padding: 4px 10px;
@@ -117,46 +137,20 @@ tr:hover {
   background: #2ecc71;
 }
 
-/* STATUS */
-
-.status {
-  background: #eee;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
+.completed td {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
-
-/* CHECKBOX */
-
-.check {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
-/* ICONS */
 
 .edit i {
   cursor: pointer;
-  color: #555;
 }
 
 .delete i {
   cursor: pointer;
-  color: #ff4d4d;
-}
-
-.edit i:hover {
-  color: #6c4cff;
-}
-
-.delete i:hover {
   color: red;
 }
 
-/* COMPLETED TASK */
-
-.completed td {
-  text-decoration: line-through;
-  opacity: 0.6;
+tr {
+  cursor: grab;
 }
