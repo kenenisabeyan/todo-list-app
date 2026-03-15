@@ -1,50 +1,17 @@
 const taskList = document.getElementById("taskList")
+const addBtn = document.getElementById("addBtn")
 
-const tasks = [
+let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
-{
-name:"Go to gym",
-priority:"High",
-status:"To Do"
-},
-
-{
-name:"Read a book",
-priority:"Low",
-status:"Done"
-},
-
-{
-name:"Go to market",
-priority:"Medium",
-status:"In Progress"
-},
-
-{
-name:"Restart Learning Solidworks",
-priority:"High",
-status:"To Do"
-},
-
-{
-name:"change slider to scroll",
-priority:"High",
-status:"Done"
-},
-
-{
-name:"To publish the article",
-priority:"Medium",
-status:"In Progress"
+function save(){
+localStorage.setItem("tasks",JSON.stringify(tasks))
 }
-
-]
 
 function render(){
 
 taskList.innerHTML=""
 
-tasks.forEach(task=>{
+tasks.forEach((task,index)=>{
 
 let circleClass=""
 
@@ -75,16 +42,14 @@ ${task.priority}
 </div>
 
 
-<div class="status">
-${task.status}
-</div>
+<div class="status">${task.status}</div>
 
 
 <div class="task-right">
 
 <div class="circle ${circleClass}"></div>
 
-<i class="fa-regular fa-pen-to-square"></i>
+<i class="fa-regular fa-pen-to-square edit"></i>
 
 <i class="fa-regular fa-trash-can delete"></i>
 
@@ -94,7 +59,81 @@ ${task.status}
 
 taskList.appendChild(div)
 
+
+// DELETE
+div.querySelector(".delete").onclick=()=>{
+
+tasks.splice(index,1)
+
+save()
+
+render()
+
+}
+
+
+// EDIT
+div.querySelector(".edit").onclick=()=>{
+
+const newText=prompt("Edit task",task.name)
+
+if(newText){
+
+task.name=newText
+
+save()
+
+render()
+
+}
+
+}
+
+
+// STATUS CHANGE
+div.querySelector(".circle").onclick=()=>{
+
+if(task.status==="To Do"){
+task.status="In Progress"
+}
+
+else if(task.status==="In Progress"){
+task.status="Done"
+}
+
+else{
+task.status="To Do"
+}
+
+save()
+
+render()
+
+}
+
 })
+
+}
+
+addBtn.onclick=()=>{
+
+const name=prompt("Task name")
+
+if(!name) return
+
+const priority=prompt("Priority (High, Medium, Low)","High")
+
+tasks.push({
+
+name,
+priority,
+status:"To Do"
+
+})
+
+save()
+
+render()
 
 }
 
