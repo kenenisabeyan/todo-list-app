@@ -13,32 +13,42 @@ body {
 }
 
 .container {
-  width: 900px;
+  width: 100%;
+  max-width: 900px;
 }
 
 h1 {
   margin-bottom: 20px;
 }
 
+/* ⭐ INPUT SECTION FIX */
+
 .input-section {
-  display: flex;
-  gap: 10px;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 12px;
   margin-bottom: 25px;
+  width: 100%;
+
 }
 
-input,
-select {
-  padding: 10px;
+.input-section input,
+.input-section select,
+.input-section button {
+
+  width: 100%;
+  padding: 12px;
   border-radius: 8px;
   border: 1px solid #ddd;
+  font-size: 14px;
+
 }
 
 button {
   background: #6c4cff;
   color: white;
   border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
   cursor: pointer;
 }
 
