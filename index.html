@@ -25,9 +25,15 @@
 
     <h1>Task Manager</h1>
 
+    <!-- INPUT SECTION -->
+
     <div class="input-section">
 
       <input id="taskInput" placeholder="Enter task">
+
+      <input type="time" id="startTime">
+
+      <input type="time" id="endTime">
 
       <select id="prioritySelect">
         <option>High</option>
@@ -47,36 +53,39 @@
 
     </div>
 
-    <div class="top-bar">
 
-      <div class="task-count">
-        Tasks: <span id="taskCount">0</span>
+    <!-- PROGRESS -->
+
+    <div class="progress-section">
+
+      <div class="progress-text">
+        Progress: <span id="progressText">0%</span>
       </div>
 
-      <div class="filters">
-
-        <button data-filter="All" class="active">All</button>
-        <button data-filter="To Do">To Do</button>
-        <button data-filter="In Progress">In Progress</button>
-        <button data-filter="Done">Done</button>
-
+      <div class="progress-bar">
+        <div id="progressFill"></div>
       </div>
 
     </div>
 
+
+    <!-- TASK TABLE -->
 
     <table>
 
       <thead>
 
         <tr>
+
           <th>#</th>
           <th>Task</th>
+          <th>Time</th>
           <th>Priority</th>
           <th>Status</th>
-          <th>Done</th>
+          <th>Check</th>
           <th>Edit</th>
           <th>Delete</th>
+
         </tr>
 
       </thead>
