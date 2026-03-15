@@ -2,19 +2,17 @@ const taskInput = document.getElementById("taskInput")
 const prioritySelect = document.getElementById("prioritySelect")
 const statusSelect = document.getElementById("statusSelect")
 const addTaskBtn = document.getElementById("addTaskBtn")
-const taskList = document.getElementById("taskList")
+const taskTable = document.getElementById("taskTable")
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
-function saveTasks(){
-
+function save(){
 localStorage.setItem("tasks",JSON.stringify(tasks))
-
 }
 
-function renderTasks(){
+function render(){
 
-taskList.innerHTML=""
+taskTable.innerHTML=""
 
 tasks.forEach((task,index)=>{
 
@@ -23,65 +21,39 @@ let circleClass=""
 if(task.status==="Done") circleClass="done"
 if(task.status==="In Progress") circleClass="progress"
 
-const row=document.createElement("div")
-
-row.className="task-row"
+const row=document.createElement("tr")
 
 row.innerHTML=`
 
-<div class="column">
+<td>${index+1}</td>
 
-<div class="label">Task ${index+1}</div>
-<div class="task-name">${task.name}</div>
+<td>${task.name}</td>
 
-</div>
+<td class="${task.priority.toLowerCase()}">${task.priority}</td>
 
+<td><span class="status">${task.status}</span></td>
 
-<div class="column">
+<td><span class="circle ${circleClass}"></span></td>
 
-<div class="label">Priority</div>
-<div class="priority ${task.priority.toLowerCase()}">
-${task.priority}
-</div>
+<td><i class="fa-solid fa-pen edit"></i></td>
 
-</div>
-
-
-<div class="column">
-
-<div class="label">Status</div>
-<div class="status">${task.status}</div>
-
-</div>
-
-
-<div class="circle ${circleClass}"></div>
-
-<i class="fa-solid fa-pen edit"></i>
-
-<i class="fa-solid fa-trash delete"></i>
+<td><i class="fa-solid fa-trash delete"></i></td>
 
 `
 
-taskList.appendChild(row)
+taskTable.appendChild(row)
 
 
-
-// delete
 
 row.querySelector(".delete").onclick=()=>{
 
 tasks.splice(index,1)
-
-saveTasks()
-
-renderTasks()
+save()
+render()
 
 }
 
 
-
-// edit
 
 row.querySelector(".edit").onclick=()=>{
 
@@ -91,17 +63,14 @@ if(newTask){
 
 task.name=newTask
 
-saveTasks()
-
-renderTasks()
-
-}
+save()
+render()
 
 }
 
+}
 
 
-// change status
 
 row.querySelector(".circle").onclick=()=>{
 
@@ -123,9 +92,8 @@ task.status="To Do"
 
 }
 
-saveTasks()
-
-renderTasks()
+save()
+render()
 
 }
 
@@ -141,7 +109,7 @@ if(name==="") return
 
 tasks.push({
 
-name:name,
+name,
 priority:prioritySelect.value,
 status:statusSelect.value
 
@@ -149,10 +117,10 @@ status:statusSelect.value
 
 taskInput.value=""
 
-saveTasks()
+save()
 
-renderTasks()
+render()
 
 }
 
-renderTasks()
+render()
