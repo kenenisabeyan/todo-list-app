@@ -20,12 +20,11 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 h1 {
   font-size: 34px;
-  font-weight: 600;
 }
 
 #addBtn {
@@ -34,9 +33,21 @@ h1 {
   border: none;
   padding: 12px 22px;
   border-radius: 12px;
-  font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 6px 15px rgba(108, 76, 255, 0.3);
+}
+
+.input-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+input,
+select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  flex: 1;
 }
 
 .task {
@@ -119,5 +130,5 @@ h1 {
 }
 
 .delete {
-  color: #ff4d4d;
+  color: red;
 }
