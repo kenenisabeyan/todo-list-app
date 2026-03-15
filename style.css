@@ -21,8 +21,6 @@ h1 {
   margin-bottom: 20px;
 }
 
-/* ⭐ INPUT SECTION FIX */
-
 .input-section {
 
   display: grid;
@@ -118,11 +116,20 @@ tr:hover {
   transform: rotate(45deg);
 }
 
-.delete {
+.edit i {
+  color: #555;
+  cursor: pointer;
+}
+
+.delete i {
   color: red;
   cursor: pointer;
 }
 
-.edit {
-  cursor: pointer;
+.edit i:hover {
+  color: #6c4cff;
+}
+
+.delete i:hover {
+  color: #ff3b3b;
 }
