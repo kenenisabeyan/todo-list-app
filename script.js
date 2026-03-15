@@ -26,24 +26,16 @@ const row=document.createElement("tr")
 row.innerHTML=`
 
 <td>${index+1}</td>
-
 <td>${task.name}</td>
-
 <td class="${task.priority.toLowerCase()}">${task.priority}</td>
-
 <td><span class="status">${task.status}</span></td>
-
 <td><span class="circle ${circleClass}"></span></td>
-
-<td><i class="fa-solid fa-pen edit"></i></td>
-
-<td><i class="fa-solid fa-trash delete"></i></td>
+<td class="edit">✏</td>
+<td class="delete">🗑</td>
 
 `
 
 taskTable.appendChild(row)
-
-
 
 row.querySelector(".delete").onclick=()=>{
 
@@ -53,43 +45,28 @@ render()
 
 }
 
-
-
 row.querySelector(".edit").onclick=()=>{
 
 const newTask=prompt("Edit task",task.name)
 
 if(newTask){
-
 task.name=newTask
-
 save()
 render()
-
 }
 
 }
-
-
 
 row.querySelector(".circle").onclick=()=>{
 
 if(task.status==="To Do"){
-
 task.status="In Progress"
-
 }
-
 else if(task.status==="In Progress"){
-
 task.status="Done"
-
 }
-
 else{
-
 task.status="To Do"
-
 }
 
 save()
@@ -108,11 +85,9 @@ const name=taskInput.value.trim()
 if(name==="") return
 
 tasks.push({
-
 name,
 priority:prioritySelect.value,
 status:statusSelect.value
-
 })
 
 taskInput.value=""
