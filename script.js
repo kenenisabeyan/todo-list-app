@@ -1,18 +1,20 @@
 const taskInput = document.getElementById("taskInput")
 const prioritySelect = document.getElementById("prioritySelect")
 const statusSelect = document.getElementById("statusSelect")
-const addBtn = document.getElementById("addBtn")
+const addTaskBtn = document.getElementById("addTaskBtn")
 const taskList = document.getElementById("taskList")
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
-function save(){
-localStorage.setItem("tasks",JSON.stringify(tasks))
+function saveTasks(){
+
+localStorage.setItem("tasks", JSON.stringify(tasks))
+
 }
 
-function render(){
+function renderTasks(){
 
-taskList.innerHTML=""
+taskList.innerHTML = ""
 
 tasks.forEach((task,index)=>{
 
@@ -21,20 +23,21 @@ let circleClass=""
 if(task.status==="Done") circleClass="done"
 if(task.status==="In Progress") circleClass="progress"
 
-const div=document.createElement("div")
+const taskDiv = document.createElement("div")
 
-div.className="task"
+taskDiv.className="task"
 
-div.innerHTML=`
+taskDiv.innerHTML = `
 
-<div class="task-left">
+<div class="column">
 
 <div class="label">Task</div>
 <div class="task-name">${task.name}</div>
 
 </div>
 
-<div>
+
+<div class="column">
 
 <div class="label">Priority</div>
 <div class="priority ${task.priority.toLowerCase()}">
@@ -43,55 +46,86 @@ ${task.priority}
 
 </div>
 
+
+<div class="column">
+
+<div class="label">Status</div>
 <div class="status">${task.status}</div>
-
-<div class="task-right">
-
-<div class="circle ${circleClass}"></div>
-
-<i class="fa-regular fa-pen-to-square edit"></i>
-
-<i class="fa-regular fa-trash-can delete"></i>
 
 </div>
 
+
+<div class="circle ${circleClass}"></div>
+
+<i class="fa-solid fa-pen edit"></i>
+
+<i class="fa-solid fa-trash delete"></i>
+
 `
 
-taskList.appendChild(div)
+taskList.appendChild(taskDiv)
 
 
-div.querySelector(".delete").onclick=()=>{
+
+// delete
+
+taskDiv.querySelector(".delete").onclick=()=>{
+
 tasks.splice(index,1)
-save()
-render()
+
+saveTasks()
+
+renderTasks()
+
 }
 
-div.querySelector(".edit").onclick=()=>{
-const newName = prompt("Edit task",task.name)
 
-if(newName){
-task.name=newName
-save()
-render()
-}
+
+// edit
+
+taskDiv.querySelector(".edit").onclick=()=>{
+
+const newTask = prompt("Edit task",task.name)
+
+if(newTask){
+
+task.name=newTask
+
+saveTasks()
+
+renderTasks()
+
 }
 
-div.querySelector(".circle").onclick=()=>{
+}
+
+
+
+// change status
+
+taskDiv.querySelector(".circle").onclick=()=>{
 
 if(task.status==="To Do"){
+
 task.status="In Progress"
+
 }
 
 else if(task.status==="In Progress"){
+
 task.status="Done"
+
 }
 
 else{
+
 task.status="To Do"
+
 }
 
-save()
-render()
+saveTasks()
+
+renderTasks()
 
 }
 
@@ -99,8 +133,7 @@ render()
 
 }
 
-
-addBtn.onclick=()=>{
+addTaskBtn.onclick=()=>{
 
 const name = taskInput.value.trim()
 
@@ -108,18 +141,20 @@ if(name==="") return
 
 tasks.push({
 
-name,
+name:name,
+
 priority:prioritySelect.value,
+
 status:statusSelect.value
 
 })
 
 taskInput.value=""
 
-save()
+saveTasks()
 
-render()
+renderTasks()
 
 }
 
-render()
+renderTasks()
