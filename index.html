@@ -23,33 +23,43 @@
 
   <div class="container">
 
-    <div class="top">
+    <!-- Header -->
+
+    <div class="header">
 
       <h1>Task List</h1>
 
-      <button id="addBtn">+ Add Task</button>
+      <button id="addTaskBtn">+ Add Task</button>
 
     </div>
 
+
+    <!-- Input Section -->
 
     <div class="input-section">
 
-      <input type="text" id="taskInput" placeholder="Enter task...">
+      <input type="text" id="taskInput" placeholder="Enter task..." autocomplete="off" />
 
       <select id="prioritySelect">
+
         <option value="High">High</option>
         <option value="Medium">Medium</option>
         <option value="Low">Low</option>
+
       </select>
 
       <select id="statusSelect">
+
         <option value="To Do">To Do</option>
         <option value="In Progress">In Progress</option>
         <option value="Done">Done</option>
+
       </select>
 
     </div>
 
+
+    <!-- Tasks -->
 
     <div id="taskList"></div>
 
