@@ -23,39 +23,50 @@
 
   <div class="container">
 
-    <div class="header">
-
-      <h1>Task List</h1>
-
-      <button id="addTaskBtn">+ Add Task</button>
-
-    </div>
-
+    <h1>Task List</h1>
 
     <div class="input-section">
 
-      <input type="text" id="taskInput" placeholder="Enter task..." autocomplete="off">
+      <input id="taskInput" placeholder="Enter task">
 
       <select id="prioritySelect">
-
-        <option value="High">High</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
-
+        <option>High</option>
+        <option>Medium</option>
+        <option>Low</option>
       </select>
 
       <select id="statusSelect">
-
-        <option value="To Do">To Do</option>
-        <option value="In Progress">In Progress</option>
-        <option value="Done">Done</option>
-
+        <option>To Do</option>
+        <option>In Progress</option>
+        <option>Done</option>
       </select>
+
+      <button id="addTaskBtn">Add Task</button>
 
     </div>
 
 
-    <div id="taskList"></div>
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>#</th>
+          <th>Task</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Done</th>
+          <th>Edit</th>
+          <th>Delete</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="taskTable"></tbody>
+
+    </table>
 
   </div>
 
