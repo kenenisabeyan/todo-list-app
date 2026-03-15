@@ -1,60 +1,73 @@
-const taskInput = document.getElementById("taskInput")
-const startTime = document.getElementById("startTime")
-const endTime = document.getElementById("endTime")
-const prioritySelect = document.getElementById("prioritySelect")
-const statusSelect = document.getElementById("statusSelect")
-const addTaskBtn = document.getElementById("addTaskBtn")
-const taskTable = document.getElementById("taskTable")
+const taskInput=document.getElementById("taskInput")
+const dueDate=document.getElementById("dueDate")
+const categorySelect=document.getElementById("categorySelect")
+const prioritySelect=document.getElementById("prioritySelect")
 
-let tasks = JSON.parse(localStorage.getItem("tasks")) || []
+const searchInput=document.getElementById("searchInput")
+
+const filterPriority=document.getElementById("filterPriority")
+const filterCategory=document.getElementById("filterCategory")
+const filterDone=document.getElementById("filterDone")
+
+const taskTable=document.getElementById("taskTable")
+
+let tasks=JSON.parse(localStorage.getItem("tasks"))||[]
 
 function save(){
 localStorage.setItem("tasks",JSON.stringify(tasks))
 }
 
-function updateProgress(){
+function analytics(){
 
-const done = tasks.filter(t=>t.completed).length
+const total=tasks.length
+const done=tasks.filter(t=>t.completed).length
 
-const percent = tasks.length===0 ? 0 :
-Math.round((done/tasks.length)*100)
+document.getElementById("totalTasks").textContent=total
+document.getElementById("doneTasks").textContent=done
 
-document.getElementById("progressText").textContent = percent+"%"
+const percent=total===0?0:Math.round(done/total*100)
 
-document.getElementById("progressFill").style.width = percent+"%"
-
+document.getElementById("progressPercent").textContent=percent+"%"
 }
 
 function render(){
 
 taskTable.innerHTML=""
 
-tasks.forEach((task,index)=>{
+let filtered=tasks.filter(t=>{
+
+return(
+(!filterPriority.value||t.priority===filterPriority.value)&&
+(!filterCategory.value||t.category===filterCategory.value)&&
+(!filterDone.value||String(t.completed)===filterDone.value)&&
+t.name.toLowerCase().includes(searchInput.value.toLowerCase())&&
+!t.deleted
+)
+
+})
+
+filtered.forEach((task,index)=>{
 
 const row=document.createElement("tr")
 
 if(task.completed) row.classList.add("completed")
 
-row.innerHTML = `
+row.innerHTML=`
 
 <td>${index+1}</td>
 
 <td>${task.name}</td>
 
-<td>${task.start} - ${task.end}</td>
+<td>${task.due}</td>
 
-<td>
-<span class="priority ${task.priority.toLowerCase()}">
+<td>${task.category}</td>
+
+<td class="priority-${task.priority.toLowerCase()}">
 ${task.priority}
-</span>
 </td>
 
 <td>
-<span class="status">${task.status}</span>
-</td>
-
-<td>
-<input type="checkbox" class="check" ${task.completed?"checked":""}>
+<input type="checkbox" ${task.completed?"checked":""}>
 </td>
 
 <td class="edit">
@@ -62,71 +75,82 @@ ${task.priority}
 </td>
 
 <td class="delete">
-<i class="fa-solid fa-trash"></i>
+<i class="fa-solid fa-xmark"></i>
 </td>
 
 `
 
 taskTable.appendChild(row)
 
-row.querySelector(".delete").onclick=()=>{
-
-tasks.splice(index,1)
+row.querySelector("input").onclick=(e)=>{
+task.completed=e.target.checked
 save()
 render()
+}
 
+row.querySelector(".delete").onclick=()=>{
+task.deleted=true
+save()
+render()
 }
 
 row.querySelector(".edit").onclick=()=>{
-
-const newTask=prompt("Edit task",task.name)
-
-if(newTask){
-task.name=newTask
+const newName=prompt("Edit task",task.name)
+if(newName){
+task.name=newName
 save()
 render()
 }
-
-}
-
-row.querySelector(".check").onclick=(e)=>{
-
-task.completed = e.target.checked
-
-save()
-render()
-
 }
 
 })
 
-updateProgress()
-
+analytics()
 }
 
-addTaskBtn.onclick=()=>{
+document.getElementById("addTaskBtn").onclick=()=>{
 
-const name = taskInput.value.trim()
+const name=taskInput.value.trim()
 
-if(name==="") return
+if(!name) return
 
 tasks.push({
 
-name:name,
-start:startTime.value,
-end:endTime.value,
+name,
+due:dueDate.value,
+category:categorySelect.value,
 priority:prioritySelect.value,
-status:statusSelect.value,
-completed:false
+completed:false,
+deleted:false
 
 })
 
-taskInput.value=""
-
 save()
-
 render()
 
 }
+
+searchInput.oninput=render
+filterPriority.onchange=render
+filterCategory.onchange=render
+filterDone.onchange=render
+
+document.getElementById("darkModeBtn").onclick=()=>{
+document.body.classList.toggle("dark")
+}
+
+setInterval(()=>{
+
+tasks.forEach(task=>{
+
+if(task.due && new Date(task.due)<new Date() && !task.completed){
+
+alert("Task overdue: "+task.name)
+
+}
+
+})
+
+},60000)
 
 render()
