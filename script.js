@@ -1,13 +1,10 @@
 const taskInput = document.getElementById("taskInput")
+const startTime = document.getElementById("startTime")
+const endTime = document.getElementById("endTime")
 const prioritySelect = document.getElementById("prioritySelect")
 const statusSelect = document.getElementById("statusSelect")
 const addTaskBtn = document.getElementById("addTaskBtn")
 const taskTable = document.getElementById("taskTable")
-const taskCount = document.getElementById("taskCount")
-
-const filterBtns = document.querySelectorAll(".filters button")
-
-let filter="All"
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
@@ -15,28 +12,36 @@ function save(){
 localStorage.setItem("tasks",JSON.stringify(tasks))
 }
 
+function updateProgress(){
+
+const done = tasks.filter(t=>t.completed).length
+
+const percent = tasks.length===0 ? 0 :
+Math.round((done/tasks.length)*100)
+
+document.getElementById("progressText").textContent = percent+"%"
+
+document.getElementById("progressFill").style.width = percent+"%"
+
+}
+
 function render(){
 
 taskTable.innerHTML=""
 
-let filtered = tasks.filter(task=>{
-return filter==="All" || task.status===filter
-})
-
-filtered.forEach((task,index)=>{
-
-let circleClass=""
-
-if(task.status==="Done") circleClass="done"
-if(task.status==="In Progress") circleClass="progress"
+tasks.forEach((task,index)=>{
 
 const row=document.createElement("tr")
 
-row.innerHTML=`
+if(task.completed) row.classList.add("completed")
+
+row.innerHTML = `
 
 <td>${index+1}</td>
 
 <td>${task.name}</td>
+
+<td>${task.start} - ${task.end}</td>
 
 <td>
 <span class="priority ${task.priority.toLowerCase()}">
@@ -49,7 +54,7 @@ ${task.priority}
 </td>
 
 <td>
-<span class="circle ${circleClass}"></span>
+<input type="checkbox" class="check" ${task.completed?"checked":""}>
 </td>
 
 <td class="edit">
@@ -65,9 +70,11 @@ ${task.priority}
 taskTable.appendChild(row)
 
 row.querySelector(".delete").onclick=()=>{
+
 tasks.splice(index,1)
 save()
 render()
+
 }
 
 row.querySelector(".edit").onclick=()=>{
@@ -82,11 +89,9 @@ render()
 
 }
 
-row.querySelector(".circle").onclick=()=>{
+row.querySelector(".check").onclick=(e)=>{
 
-if(task.status==="To Do") task.status="In Progress"
-else if(task.status==="In Progress") task.status="Done"
-else task.status="To Do"
+task.completed = e.target.checked
 
 save()
 render()
@@ -95,7 +100,7 @@ render()
 
 })
 
-taskCount.textContent = tasks.length
+updateProgress()
 
 }
 
@@ -106,32 +111,22 @@ const name = taskInput.value.trim()
 if(name==="") return
 
 tasks.push({
-name,
+
+name:name,
+start:startTime.value,
+end:endTime.value,
 priority:prioritySelect.value,
-status:statusSelect.value
+status:statusSelect.value,
+completed:false
+
 })
 
 taskInput.value=""
 
 save()
-render()
-
-}
-
-filterBtns.forEach(btn=>{
-
-btn.onclick=()=>{
-
-filterBtns.forEach(b=>b.classList.remove("active"))
-
-btn.classList.add("active")
-
-filter=btn.dataset.filter
 
 render()
 
 }
-
-})
 
 render()
