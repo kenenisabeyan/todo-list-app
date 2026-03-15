@@ -23,9 +23,19 @@
 
   <div class="container">
 
-    <h1>Task Manager</h1>
+    <header>
 
-    <!-- INPUT SECTION -->
+      <h1>Task Manager</h1>
+
+      <button id="darkModeBtn">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+
+    </header>
+
+    <div class="search-section">
+      <input id="searchInput" placeholder="Search task...">
+    </div>
 
     <div class="input-section">
 
@@ -35,16 +45,16 @@
 
       <input type="time" id="endTime">
 
+      <select id="categorySelect">
+        <option>Study</option>
+        <option>Work</option>
+        <option>Personal</option>
+      </select>
+
       <select id="prioritySelect">
         <option>High</option>
         <option selected>Medium</option>
         <option>Low</option>
-      </select>
-
-      <select id="statusSelect">
-        <option>To Do</option>
-        <option>In Progress</option>
-        <option>Done</option>
       </select>
 
       <button id="addTaskBtn">
@@ -53,14 +63,9 @@
 
     </div>
 
-
-    <!-- PROGRESS -->
-
     <div class="progress-section">
 
-      <div class="progress-text">
-        Progress: <span id="progressText">0%</span>
-      </div>
+      <span id="progressText">0%</span>
 
       <div class="progress-bar">
         <div id="progressFill"></div>
@@ -68,24 +73,19 @@
 
     </div>
 
-
-    <!-- TASK TABLE -->
-
     <table>
 
       <thead>
 
         <tr>
-
           <th>#</th>
           <th>Task</th>
           <th>Time</th>
+          <th>Category</th>
           <th>Priority</th>
-          <th>Status</th>
-          <th>Check</th>
+          <th>Done</th>
           <th>Edit</th>
           <th>Delete</th>
-
         </tr>
 
       </thead>
