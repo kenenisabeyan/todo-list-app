@@ -3,6 +3,11 @@ const prioritySelect = document.getElementById("prioritySelect")
 const statusSelect = document.getElementById("statusSelect")
 const addTaskBtn = document.getElementById("addTaskBtn")
 const taskTable = document.getElementById("taskTable")
+const taskCount = document.getElementById("taskCount")
+
+const filterBtns = document.querySelectorAll(".filters button")
+
+let filter="All"
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
@@ -14,7 +19,11 @@ function render(){
 
 taskTable.innerHTML=""
 
-tasks.forEach((task,index)=>{
+let filtered = tasks.filter(task=>{
+return filter==="All" || task.status===filter
+})
+
+filtered.forEach((task,index)=>{
 
 let circleClass=""
 
@@ -26,10 +35,22 @@ const row=document.createElement("tr")
 row.innerHTML=`
 
 <td>${index+1}</td>
+
 <td>${task.name}</td>
-<td class="${task.priority.toLowerCase()}">${task.priority}</td>
-<td><span class="status">${task.status}</span></td>
-<td><span class="circle ${circleClass}"></span></td>
+
+<td>
+<span class="priority ${task.priority.toLowerCase()}">
+${task.priority}
+</span>
+</td>
+
+<td>
+<span class="status">${task.status}</span>
+</td>
+
+<td>
+<span class="circle ${circleClass}"></span>
+</td>
 
 <td class="edit">
 <i class="fa-solid fa-pen"></i>
@@ -44,11 +65,9 @@ row.innerHTML=`
 taskTable.appendChild(row)
 
 row.querySelector(".delete").onclick=()=>{
-
 tasks.splice(index,1)
 save()
 render()
-
 }
 
 row.querySelector(".edit").onclick=()=>{
@@ -65,15 +84,9 @@ render()
 
 row.querySelector(".circle").onclick=()=>{
 
-if(task.status==="To Do"){
-task.status="In Progress"
-}
-else if(task.status==="In Progress"){
-task.status="Done"
-}
-else{
-task.status="To Do"
-}
+if(task.status==="To Do") task.status="In Progress"
+else if(task.status==="In Progress") task.status="Done"
+else task.status="To Do"
 
 save()
 render()
@@ -82,11 +95,13 @@ render()
 
 })
 
+taskCount.textContent = tasks.length
+
 }
 
 addTaskBtn.onclick=()=>{
 
-const name=taskInput.value.trim()
+const name = taskInput.value.trim()
 
 if(name==="") return
 
@@ -102,5 +117,21 @@ save()
 render()
 
 }
+
+filterBtns.forEach(btn=>{
+
+btn.onclick=()=>{
+
+filterBtns.forEach(b=>b.classList.remove("active"))
+
+btn.classList.add("active")
+
+filter=btn.dataset.filter
+
+render()
+
+}
+
+})
 
 render()
