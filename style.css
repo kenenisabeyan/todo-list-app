@@ -14,7 +14,7 @@ body {
 
 .container {
   width: 100%;
-  max-width: 900px;
+  max-width: 950px;
 }
 
 h1 {
@@ -26,8 +26,7 @@ h1 {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 12px;
-  margin-bottom: 25px;
-  width: 100%;
+  margin-bottom: 20px;
 
 }
 
@@ -35,11 +34,9 @@ h1 {
 .input-section select,
 .input-section button {
 
-  width: 100%;
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #ddd;
-  font-size: 14px;
 
 }
 
@@ -48,6 +45,29 @@ button {
   color: white;
   border: none;
   cursor: pointer;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.filters button {
+
+  background: #eee;
+  color: #333;
+  margin-left: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+
+}
+
+.filters button.active {
+  background: #6c4cff;
+  color: white;
 }
 
 table {
@@ -70,23 +90,31 @@ td {
   border-bottom: 1px solid #eee;
 }
 
+tr {
+  transition: 0.2s;
+}
+
 tr:hover {
-  background: #f9f9ff;
+  background: #f8f8ff;
+}
+
+.priority {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: white;
 }
 
 .high {
-  color: red;
-  font-weight: 500;
+  background: #ff4d4d;
 }
 
 .medium {
-  color: orange;
-  font-weight: 500;
+  background: #ff9f43;
 }
 
 .low {
-  color: green;
-  font-weight: 500;
+  background: #2ecc71;
 }
 
 .status {
@@ -117,13 +145,13 @@ tr:hover {
 }
 
 .edit i {
-  color: #555;
   cursor: pointer;
+  color: #555;
 }
 
 .delete i {
-  color: red;
   cursor: pointer;
+  color: #ff4d4d;
 }
 
 .edit i:hover {
@@ -131,5 +159,5 @@ tr:hover {
 }
 
 .delete i:hover {
-  color: #ff3b3b;
+  color: red;
 }
