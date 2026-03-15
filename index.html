@@ -32,10 +32,9 @@
 
     </header>
 
-
     <!-- SEARCH -->
 
-    <input id="searchInput" placeholder="Search tasks">
+    <input id="searchInput" placeholder="Search tasks...">
 
 
     <!-- FILTERS -->
@@ -56,11 +55,10 @@
         <option>Personal</option>
       </select>
 
-      <select id="filterStatus">
-        <option value="">Status</option>
-        <option>To Do</option>
-        <option>In Progress</option>
-        <option>Done</option>
+      <select id="filterDone">
+        <option value="">Done</option>
+        <option>true">Completed</option>
+        <option>false">Pending</option>
       </select>
 
     </div>
@@ -70,7 +68,7 @@
 
     <div class="input-section">
 
-      <input id="taskInput" placeholder="Task name">
+      <input id="taskInput" placeholder="Enter task">
 
       <input type="datetime-local" id="dueDate">
 
@@ -87,63 +85,53 @@
       </select>
 
       <button id="addTaskBtn">
-        <i class="fa-solid fa-plus"></i>
+        <i class="fa-solid fa-plus"></i> Add
       </button>
 
     </div>
 
 
-    <!-- DASHBOARD -->
+    <!-- ANALYTICS -->
 
-    <div class="dashboard">
+    <div class="analytics">
 
       <div class="card">
-        <h3>Total</h3>
-        <p id="totalTasks">0</p>
+        Total: <span id="totalTasks">0</span>
       </div>
 
       <div class="card">
-        <h3>Completed</h3>
-        <p id="doneTasks">0</p>
+        Completed: <span id="doneTasks">0</span>
       </div>
 
       <div class="card">
-        <h3>Progress</h3>
-        <p id="progressPercent">0%</p>
+        Progress: <span id="progressPercent">0%</span>
       </div>
 
     </div>
 
 
-    <!-- KANBAN BOARD -->
+    <!-- TABLE -->
 
-    <div class="board">
+    <table>
 
-      <div class="column" data-status="To Do">
+      <thead>
 
-        <h3>To Do</h3>
+        <tr>
+          <th>#</th>
+          <th>Task</th>
+          <th>Due</th>
+          <th>Category</th>
+          <th>Priority</th>
+          <th>Done</th>
+          <th>Edit</th>
+          <th>Exit</th>
+        </tr>
 
-        <div class="taskList" id="todoList"></div>
+      </thead>
 
-      </div>
+      <tbody id="taskTable"></tbody>
 
-      <div class="column" data-status="In Progress">
-
-        <h3>In Progress</h3>
-
-        <div class="taskList" id="progressList"></div>
-
-      </div>
-
-      <div class="column" data-status="Done">
-
-        <h3>Done</h3>
-
-        <div class="taskList" id="doneList"></div>
-
-      </div>
-
-    </div>
+    </table>
 
   </div>
 

@@ -1,17 +1,10 @@
 const taskInput = document.getElementById("taskInput")
-const dueDate = document.getElementById("dueDate")
-const categorySelect = document.getElementById("categorySelect")
+const startTime = document.getElementById("startTime")
+const endTime = document.getElementById("endTime")
 const prioritySelect = document.getElementById("prioritySelect")
-
-const filterPriority = document.getElementById("filterPriority")
-const filterCategory = document.getElementById("filterCategory")
-const filterStatus = document.getElementById("filterStatus")
-
-const searchInput = document.getElementById("searchInput")
-
-const todoList = document.getElementById("todoList")
-const progressList = document.getElementById("progressList")
-const doneList = document.getElementById("doneList")
+const statusSelect = document.getElementById("statusSelect")
+const addTaskBtn = document.getElementById("addTaskBtn")
+const taskTable = document.getElementById("taskTable")
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
@@ -19,155 +12,121 @@ function save(){
 localStorage.setItem("tasks",JSON.stringify(tasks))
 }
 
-function analytics(){
+function updateProgress(){
 
-const total = tasks.length
-const done = tasks.filter(t=>t.status==="Done").length
+const done = tasks.filter(t=>t.completed).length
 
-document.getElementById("totalTasks").textContent = total
-document.getElementById("doneTasks").textContent = done
+const percent = tasks.length===0 ? 0 :
+Math.round((done/tasks.length)*100)
 
-const percent = total===0 ? 0 : Math.round(done/total*100)
+document.getElementById("progressText").textContent = percent+"%"
 
-document.getElementById("progressPercent").textContent = percent+"%"
+document.getElementById("progressFill").style.width = percent+"%"
 
 }
 
 function render(){
 
-todoList.innerHTML=""
-progressList.innerHTML=""
-doneList.innerHTML=""
+taskTable.innerHTML=""
 
-let filtered = tasks.filter(t=>{
+tasks.forEach((task,index)=>{
 
-return (
-(!filterPriority.value || t.priority===filterPriority.value) &&
-(!filterCategory.value || t.category===filterCategory.value) &&
-(!filterStatus.value || t.status===filterStatus.value) &&
-t.name.toLowerCase().includes(searchInput.value.toLowerCase()) &&
-!t.deleted
-)
+const row=document.createElement("tr")
 
-})
+if(task.completed) row.classList.add("completed")
 
-filtered.forEach((task,index)=>{
+row.innerHTML = `
 
-const card=document.createElement("div")
-card.className="task"
-card.draggable=true
+<td>${index+1}</td>
 
-card.innerHTML=`
+<td>${task.name}</td>
 
-<strong>${task.name}</strong>
+<td>${task.start} - ${task.end}</td>
 
-<div class="meta">
-
-<span>${task.category}</span>
-
-<span class="priority-${task.priority.toLowerCase()}">
+<td>
+<span class="priority ${task.priority.toLowerCase()}">
 ${task.priority}
 </span>
+</td>
 
-</div>
+<td>
+<span class="status">${task.status}</span>
+</td>
 
-<div class="meta">
+<td>
+<input type="checkbox" class="check" ${task.completed?"checked":""}>
+</td>
 
-<span>${task.due}</span>
+<td class="edit">
+<i class="fa-solid fa-pen"></i>
+</td>
 
-<span>${task.status}</span>
-
-</div>
-
-<div class="actions">
-
-<i class="fa fa-check"></i>
-
-<i class="fa fa-pen"></i>
-
-<i class="fa fa-xmark"></i>
-
-</div>
+<td class="delete">
+<i class="fa-solid fa-trash"></i>
+</td>
 
 `
 
-const container =
-task.status==="To Do"?todoList:
-task.status==="In Progress"?progressList:
-doneList
+taskTable.appendChild(row)
 
-container.appendChild(card)
+row.querySelector(".delete").onclick=()=>{
 
-card.querySelector(".fa-check").onclick=()=>{
-task.status="Done"
+tasks.splice(index,1)
+save()
+render()
+
+}
+
+row.querySelector(".edit").onclick=()=>{
+
+const newTask=prompt("Edit task",task.name)
+
+if(newTask){
+task.name=newTask
 save()
 render()
 }
 
-card.querySelector(".fa-xmark").onclick=()=>{
-task.deleted=true
-save()
-render()
 }
 
-card.querySelector(".fa-pen").onclick=()=>{
-const newName=prompt("Edit task",task.name)
-if(newName){
-task.name=newName
+row.querySelector(".check").onclick=(e)=>{
+
+task.completed = e.target.checked
+
 save()
 render()
-}
+
 }
 
 })
 
-analytics()
+updateProgress()
 
 }
 
-document.getElementById("addTaskBtn").onclick=()=>{
+addTaskBtn.onclick=()=>{
 
-const name=taskInput.value.trim()
+const name = taskInput.value.trim()
 
-if(!name) return
+if(name==="") return
 
 tasks.push({
 
-name,
-due:dueDate.value,
-category:categorySelect.value,
+name:name,
+start:startTime.value,
+end:endTime.value,
 priority:prioritySelect.value,
-status:"To Do",
-deleted:false
+status:statusSelect.value,
+completed:false
 
 })
 
+taskInput.value=""
+
 save()
+
 render()
 
 }
-
-searchInput.oninput=render
-filterPriority.onchange=render
-filterCategory.onchange=render
-filterStatus.onchange=render
-
-document.getElementById("darkModeBtn").onclick=()=>{
-document.body.classList.toggle("dark")
-}
-
-setInterval(()=>{
-
-tasks.forEach(task=>{
-
-if(task.due && new Date(task.due) < new Date() && task.status!=="Done"){
-
-alert("Task overdue: "+task.name)
-
-}
-
-})
-
-},60000)
 
 render()
