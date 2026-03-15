@@ -99,6 +99,7 @@ h1 {
   height: 22px;
   border-radius: 50%;
   border: 2px solid #d3d3d3;
+  cursor: pointer;
 }
 
 .circle.done {
