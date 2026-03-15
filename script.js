@@ -30,8 +30,14 @@ row.innerHTML=`
 <td class="${task.priority.toLowerCase()}">${task.priority}</td>
 <td><span class="status">${task.status}</span></td>
 <td><span class="circle ${circleClass}"></span></td>
-<td class="edit">✏</td>
-<td class="delete">🗑</td>
+
+<td class="edit">
+<i class="fa-solid fa-pen"></i>
+</td>
+
+<td class="delete">
+<i class="fa-solid fa-trash"></i>
+</td>
 
 `
 
@@ -93,7 +99,6 @@ status:statusSelect.value
 taskInput.value=""
 
 save()
-
 render()
 
 }
