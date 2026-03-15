@@ -8,13 +8,13 @@ let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
 function saveTasks(){
 
-localStorage.setItem("tasks", JSON.stringify(tasks))
+localStorage.setItem("tasks",JSON.stringify(tasks))
 
 }
 
 function renderTasks(){
 
-taskList.innerHTML = ""
+taskList.innerHTML=""
 
 tasks.forEach((task,index)=>{
 
@@ -23,15 +23,15 @@ let circleClass=""
 if(task.status==="Done") circleClass="done"
 if(task.status==="In Progress") circleClass="progress"
 
-const taskDiv = document.createElement("div")
+const row=document.createElement("div")
 
-taskDiv.className="task"
+row.className="task-row"
 
-taskDiv.innerHTML = `
+row.innerHTML=`
 
 <div class="column">
 
-<div class="label">Task</div>
+<div class="label">Task ${index+1}</div>
 <div class="task-name">${task.name}</div>
 
 </div>
@@ -63,13 +63,13 @@ ${task.priority}
 
 `
 
-taskList.appendChild(taskDiv)
+taskList.appendChild(row)
 
 
 
 // delete
 
-taskDiv.querySelector(".delete").onclick=()=>{
+row.querySelector(".delete").onclick=()=>{
 
 tasks.splice(index,1)
 
@@ -83,9 +83,9 @@ renderTasks()
 
 // edit
 
-taskDiv.querySelector(".edit").onclick=()=>{
+row.querySelector(".edit").onclick=()=>{
 
-const newTask = prompt("Edit task",task.name)
+const newTask=prompt("Edit task",task.name)
 
 if(newTask){
 
@@ -103,7 +103,7 @@ renderTasks()
 
 // change status
 
-taskDiv.querySelector(".circle").onclick=()=>{
+row.querySelector(".circle").onclick=()=>{
 
 if(task.status==="To Do"){
 
@@ -135,16 +135,14 @@ renderTasks()
 
 addTaskBtn.onclick=()=>{
 
-const name = taskInput.value.trim()
+const name=taskInput.value.trim()
 
 if(name==="") return
 
 tasks.push({
 
 name:name,
-
 priority:prioritySelect.value,
-
 status:statusSelect.value
 
 })
