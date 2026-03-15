@@ -1,14 +1,17 @@
 const taskInput = document.getElementById("taskInput")
-const startTime = document.getElementById("startTime")
-const endTime = document.getElementById("endTime")
+const dueDate = document.getElementById("dueDate")
 const categorySelect = document.getElementById("categorySelect")
 const prioritySelect = document.getElementById("prioritySelect")
-const addTaskBtn = document.getElementById("addTaskBtn")
-const taskTable = document.getElementById("taskTable")
+
+const filterPriority = document.getElementById("filterPriority")
+const filterCategory = document.getElementById("filterCategory")
+const filterStatus = document.getElementById("filterStatus")
+
 const searchInput = document.getElementById("searchInput")
 
-const progressFill = document.getElementById("progressFill")
-const progressText = document.getElementById("progressText")
+const todoList = document.getElementById("todoList")
+const progressList = document.getElementById("progressList")
+const doneList = document.getElementById("doneList")
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
@@ -16,155 +19,155 @@ function save(){
 localStorage.setItem("tasks",JSON.stringify(tasks))
 }
 
-function updateProgress(){
+function analytics(){
 
-const done = tasks.filter(t=>t.completed).length
+const total = tasks.length
+const done = tasks.filter(t=>t.status==="Done").length
 
-const percent = tasks.length === 0 ? 0 :
-Math.round((done/tasks.length)*100)
+document.getElementById("totalTasks").textContent = total
+document.getElementById("doneTasks").textContent = done
 
-progressText.textContent = percent + "%"
-progressFill.style.width = percent + "%"
+const percent = total===0 ? 0 : Math.round(done/total*100)
+
+document.getElementById("progressPercent").textContent = percent+"%"
 
 }
 
 function render(){
 
-taskTable.innerHTML=""
+todoList.innerHTML=""
+progressList.innerHTML=""
+doneList.innerHTML=""
 
-let search = searchInput.value.toLowerCase()
+let filtered = tasks.filter(t=>{
 
-tasks
-.filter(t=>t.name.toLowerCase().includes(search))
-.forEach((task,index)=>{
+return (
+(!filterPriority.value || t.priority===filterPriority.value) &&
+(!filterCategory.value || t.category===filterCategory.value) &&
+(!filterStatus.value || t.status===filterStatus.value) &&
+t.name.toLowerCase().includes(searchInput.value.toLowerCase()) &&
+!t.deleted
+)
 
-const row=document.createElement("tr")
-row.setAttribute("draggable","true")
+})
 
-if(task.completed) row.classList.add("completed")
+filtered.forEach((task,index)=>{
 
-row.innerHTML=`
+const card=document.createElement("div")
+card.className="task"
+card.draggable=true
 
-<td>${index+1}</td>
+card.innerHTML=`
 
-<td>${task.name}</td>
+<strong>${task.name}</strong>
 
-<td>${task.start} - ${task.end}</td>
+<div class="meta">
 
-<td>${task.category}</td>
+<span>${task.category}</span>
 
-<td>
-<span class="priority ${task.priority.toLowerCase()}">
+<span class="priority-${task.priority.toLowerCase()}">
 ${task.priority}
 </span>
-</td>
 
-<td>
-<input type="checkbox" ${task.completed?"checked":""}>
-</td>
+</div>
 
-<td class="edit">
-<i class="fa-solid fa-pen"></i>
-</td>
+<div class="meta">
 
-<td class="delete">
-<i class="fa-solid fa-trash"></i>
-</td>
+<span>${task.due}</span>
+
+<span>${task.status}</span>
+
+</div>
+
+<div class="actions">
+
+<i class="fa fa-check"></i>
+
+<i class="fa fa-pen"></i>
+
+<i class="fa fa-xmark"></i>
+
+</div>
 
 `
 
-taskTable.appendChild(row)
+const container =
+task.status==="To Do"?todoList:
+task.status==="In Progress"?progressList:
+doneList
 
-row.querySelector(".delete").onclick=()=>{
-tasks.splice(index,1)
+container.appendChild(card)
+
+card.querySelector(".fa-check").onclick=()=>{
+task.status="Done"
 save()
 render()
 }
 
-row.querySelector(".edit").onclick=()=>{
-
-const newTask=prompt("Edit task",task.name)
-
-if(newTask){
-task.name=newTask
+card.querySelector(".fa-xmark").onclick=()=>{
+task.deleted=true
 save()
 render()
 }
 
-}
-
-row.querySelector("input").onclick=(e)=>{
-
-task.completed = e.target.checked
-
+card.querySelector(".fa-pen").onclick=()=>{
+const newName=prompt("Edit task",task.name)
+if(newName){
+task.name=newName
 save()
 render()
+}
+}
+
+})
+
+analytics()
 
 }
 
-row.addEventListener("dragstart",()=>{
-row.classList.add("dragging")
-})
+document.getElementById("addTaskBtn").onclick=()=>{
 
-row.addEventListener("dragend",()=>{
-row.classList.remove("dragging")
-})
+const name=taskInput.value.trim()
 
-})
-
-updateProgress()
-
-}
-
-taskTable.addEventListener("dragover",e=>{
-
-e.preventDefault()
-
-const dragging=document.querySelector(".dragging")
-
-const rows=[...taskTable.querySelectorAll("tr:not(.dragging)")]
-
-const next=rows.find(row=>{
-
-return e.clientY <= row.offsetTop + row.offsetHeight/2
-
-})
-
-taskTable.insertBefore(dragging,next)
-
-})
-
-addTaskBtn.onclick=()=>{
-
-const name = taskInput.value.trim()
-
-if(name==="") return
+if(!name) return
 
 tasks.push({
 
-name:name,
-start:startTime.value,
-end:endTime.value,
+name,
+due:dueDate.value,
 category:categorySelect.value,
 priority:prioritySelect.value,
-completed:false
+status:"To Do",
+deleted:false
 
 })
 
-taskInput.value=""
-
 save()
-
 render()
 
 }
 
 searchInput.oninput=render
+filterPriority.onchange=render
+filterCategory.onchange=render
+filterStatus.onchange=render
 
 document.getElementById("darkModeBtn").onclick=()=>{
-
 document.body.classList.toggle("dark")
+}
+
+setInterval(()=>{
+
+tasks.forEach(task=>{
+
+if(task.due && new Date(task.due) < new Date() && task.status!=="Done"){
+
+alert("Task overdue: "+task.name)
 
 }
+
+})
+
+},60000)
 
 render()
