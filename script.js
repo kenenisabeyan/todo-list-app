@@ -1,5 +1,8 @@
-const taskList = document.getElementById("taskList")
+const taskInput = document.getElementById("taskInput")
+const prioritySelect = document.getElementById("prioritySelect")
+const statusSelect = document.getElementById("statusSelect")
 const addBtn = document.getElementById("addBtn")
+const taskList = document.getElementById("taskList")
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
@@ -31,7 +34,6 @@ div.innerHTML=`
 
 </div>
 
-
 <div>
 
 <div class="label">Priority</div>
@@ -41,9 +43,7 @@ ${task.priority}
 
 </div>
 
-
 <div class="status">${task.status}</div>
-
 
 <div class="task-right">
 
@@ -60,37 +60,22 @@ ${task.priority}
 taskList.appendChild(div)
 
 
-// DELETE
 div.querySelector(".delete").onclick=()=>{
-
 tasks.splice(index,1)
-
 save()
-
 render()
-
 }
 
-
-// EDIT
 div.querySelector(".edit").onclick=()=>{
+const newName = prompt("Edit task",task.name)
 
-const newText=prompt("Edit task",task.name)
-
-if(newText){
-
-task.name=newText
-
+if(newName){
+task.name=newName
 save()
-
 render()
-
+}
 }
 
-}
-
-
-// STATUS CHANGE
 div.querySelector(".circle").onclick=()=>{
 
 if(task.status==="To Do"){
@@ -106,7 +91,6 @@ task.status="To Do"
 }
 
 save()
-
 render()
 
 }
@@ -115,21 +99,22 @@ render()
 
 }
 
+
 addBtn.onclick=()=>{
 
-const name=prompt("Task name")
+const name = taskInput.value.trim()
 
-if(!name) return
-
-const priority=prompt("Priority (High, Medium, Low)","High")
+if(name==="") return
 
 tasks.push({
 
 name,
-priority,
-status:"To Do"
+priority:prioritySelect.value,
+status:statusSelect.value
 
 })
+
+taskInput.value=""
 
 save()
 
