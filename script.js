@@ -1,10 +1,14 @@
 const taskInput = document.getElementById("taskInput")
 const startTime = document.getElementById("startTime")
 const endTime = document.getElementById("endTime")
+const categorySelect = document.getElementById("categorySelect")
 const prioritySelect = document.getElementById("prioritySelect")
-const statusSelect = document.getElementById("statusSelect")
 const addTaskBtn = document.getElementById("addTaskBtn")
 const taskTable = document.getElementById("taskTable")
+const searchInput = document.getElementById("searchInput")
+
+const progressFill = document.getElementById("progressFill")
+const progressText = document.getElementById("progressText")
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
@@ -16,12 +20,11 @@ function updateProgress(){
 
 const done = tasks.filter(t=>t.completed).length
 
-const percent = tasks.length===0 ? 0 :
+const percent = tasks.length === 0 ? 0 :
 Math.round((done/tasks.length)*100)
 
-document.getElementById("progressText").textContent = percent+"%"
-
-document.getElementById("progressFill").style.width = percent+"%"
+progressText.textContent = percent + "%"
+progressFill.style.width = percent + "%"
 
 }
 
@@ -29,19 +32,26 @@ function render(){
 
 taskTable.innerHTML=""
 
-tasks.forEach((task,index)=>{
+let search = searchInput.value.toLowerCase()
+
+tasks
+.filter(t=>t.name.toLowerCase().includes(search))
+.forEach((task,index)=>{
 
 const row=document.createElement("tr")
+row.setAttribute("draggable","true")
 
 if(task.completed) row.classList.add("completed")
 
-row.innerHTML = `
+row.innerHTML=`
 
 <td>${index+1}</td>
 
 <td>${task.name}</td>
 
 <td>${task.start} - ${task.end}</td>
+
+<td>${task.category}</td>
 
 <td>
 <span class="priority ${task.priority.toLowerCase()}">
@@ -50,11 +60,7 @@ ${task.priority}
 </td>
 
 <td>
-<span class="status">${task.status}</span>
-</td>
-
-<td>
-<input type="checkbox" class="check" ${task.completed?"checked":""}>
+<input type="checkbox" ${task.completed?"checked":""}>
 </td>
 
 <td class="edit">
@@ -70,11 +76,9 @@ ${task.priority}
 taskTable.appendChild(row)
 
 row.querySelector(".delete").onclick=()=>{
-
 tasks.splice(index,1)
 save()
 render()
-
 }
 
 row.querySelector(".edit").onclick=()=>{
@@ -89,7 +93,7 @@ render()
 
 }
 
-row.querySelector(".check").onclick=(e)=>{
+row.querySelector("input").onclick=(e)=>{
 
 task.completed = e.target.checked
 
@@ -98,11 +102,37 @@ render()
 
 }
 
+row.addEventListener("dragstart",()=>{
+row.classList.add("dragging")
+})
+
+row.addEventListener("dragend",()=>{
+row.classList.remove("dragging")
+})
+
 })
 
 updateProgress()
 
 }
+
+taskTable.addEventListener("dragover",e=>{
+
+e.preventDefault()
+
+const dragging=document.querySelector(".dragging")
+
+const rows=[...taskTable.querySelectorAll("tr:not(.dragging)")]
+
+const next=rows.find(row=>{
+
+return e.clientY <= row.offsetTop + row.offsetHeight/2
+
+})
+
+taskTable.insertBefore(dragging,next)
+
+})
 
 addTaskBtn.onclick=()=>{
 
@@ -115,8 +145,8 @@ tasks.push({
 name:name,
 start:startTime.value,
 end:endTime.value,
+category:categorySelect.value,
 priority:prioritySelect.value,
-status:statusSelect.value,
 completed:false
 
 })
@@ -126,6 +156,14 @@ taskInput.value=""
 save()
 
 render()
+
+}
+
+searchInput.oninput=render
+
+document.getElementById("darkModeBtn").onclick=()=>{
+
+document.body.classList.toggle("dark")
 
 }
 
