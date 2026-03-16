@@ -4,15 +4,11 @@
 <head>
 
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Task Manager</title>
 
   <link rel="stylesheet" href="style.css">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -23,18 +19,14 @@
   <div class="container">
 
     <header>
-
       <h1>Task Manager</h1>
-
-      <button id="darkModeBtn">
-        <i class="fa-solid fa-moon"></i>
-      </button>
-
+      <button id="darkBtn"><i class="fa-solid fa-moon"></i></button>
     </header>
+
 
     <!-- SEARCH -->
 
-    <input id="searchInput" placeholder="Search tasks...">
+    <input id="search" placeholder="Search task...">
 
 
     <!-- FILTERS -->
@@ -55,10 +47,10 @@
         <option>Personal</option>
       </select>
 
-      <select id="filterDone">
-        <option value="">Done</option>
-        <option>true">Completed</option>
-        <option>false">Pending</option>
+      <select id="filterStatus">
+        <option value="">Status</option>
+        <option value="true">Completed</option>
+        <option value="false">Pending</option>
       </select>
 
     </div>
@@ -66,45 +58,45 @@
 
     <!-- ADD TASK -->
 
-    <div class="input-section">
+    <div class="task-input">
 
-      <input id="taskInput" placeholder="Enter task">
+      <input id="taskName" placeholder="Enter task">
 
-      <input type="datetime-local" id="dueDate">
+      <input type="datetime-local" id="taskDate">
 
-      <select id="categorySelect">
+      <select id="taskCategory">
         <option>Study</option>
         <option>Work</option>
         <option>Personal</option>
       </select>
 
-      <select id="prioritySelect">
+      <select id="taskPriority">
         <option>High</option>
         <option>Medium</option>
         <option>Low</option>
       </select>
 
-      <button id="addTaskBtn">
+      <button id="addBtn">
         <i class="fa-solid fa-plus"></i> Add
       </button>
 
     </div>
 
 
-    <!-- ANALYTICS -->
+    <!-- DASHBOARD -->
 
-    <div class="analytics">
+    <div class="dashboard">
 
       <div class="card">
-        Total: <span id="totalTasks">0</span>
+        Total <span id="total">0</span>
       </div>
 
       <div class="card">
-        Completed: <span id="doneTasks">0</span>
+        Done <span id="done">0</span>
       </div>
 
       <div class="card">
-        Progress: <span id="progressPercent">0%</span>
+        Progress <span id="progress">0%</span>
       </div>
 
     </div>
