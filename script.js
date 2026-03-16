@@ -1,64 +1,67 @@
-const taskInput=document.getElementById("taskInput")
-const dueDate=document.getElementById("dueDate")
-const categorySelect=document.getElementById("categorySelect")
-const prioritySelect=document.getElementById("prioritySelect")
+const table=document.getElementById("taskTable")
 
-const searchInput=document.getElementById("searchInput")
+const search=document.getElementById("search")
 
 const filterPriority=document.getElementById("filterPriority")
 const filterCategory=document.getElementById("filterCategory")
-const filterDone=document.getElementById("filterDone")
-
-const taskTable=document.getElementById("taskTable")
+const filterStatus=document.getElementById("filterStatus")
 
 let tasks=JSON.parse(localStorage.getItem("tasks"))||[]
 
-function save(){
-localStorage.setItem("tasks",JSON.stringify(tasks))
+const save=()=>localStorage.setItem("tasks",JSON.stringify(tasks))
+
+
+function dashboard(){
+
+const total=tasks.filter(t=>!t.deleted).length
+
+const done=tasks.filter(t=>t.completed && !t.deleted).length
+
+document.getElementById("total").textContent=total
+document.getElementById("done").textContent=done
+
+const percent=total?Math.round(done/total*100):0
+
+document.getElementById("progress").textContent=percent+"%"
+
 }
 
-function analytics(){
-
-const total=tasks.length
-const done=tasks.filter(t=>t.completed).length
-
-document.getElementById("totalTasks").textContent=total
-document.getElementById("doneTasks").textContent=done
-
-const percent=total===0?0:Math.round(done/total*100)
-
-document.getElementById("progressPercent").textContent=percent+"%"
-}
 
 function render(){
 
-taskTable.innerHTML=""
+table.innerHTML=""
 
-let filtered=tasks.filter(t=>{
+const filtered=tasks.filter(t=>{
 
 return(
-(!filterPriority.value||t.priority===filterPriority.value)&&
-(!filterCategory.value||t.category===filterCategory.value)&&
-(!filterDone.value||String(t.completed)===filterDone.value)&&
-t.name.toLowerCase().includes(searchInput.value.toLowerCase())&&
-!t.deleted
+
+!t.deleted &&
+
+(!filterPriority.value || t.priority===filterPriority.value) &&
+
+(!filterCategory.value || t.category===filterCategory.value) &&
+
+(!filterStatus.value || String(t.completed)===filterStatus.value) &&
+
+t.name.toLowerCase().includes(search.value.toLowerCase())
+
 )
 
 })
 
-filtered.forEach((task,index)=>{
+filtered.forEach((task,i)=>{
 
-const row=document.createElement("tr")
+const tr=document.createElement("tr")
 
-if(task.completed) row.classList.add("completed")
+if(task.completed) tr.classList.add("completed")
 
-row.innerHTML=`
+tr.innerHTML=`
 
-<td>${index+1}</td>
+<td>${i+1}</td>
 
 <td>${task.name}</td>
 
-<td>${task.due}</td>
+<td>${task.due||""}</td>
 
 <td>${task.category}</td>
 
@@ -67,90 +70,128 @@ ${task.priority}
 </td>
 
 <td>
-<input type="checkbox" ${task.completed?"checked":""}>
+<input type="checkbox" data-check="${task.id}" ${task.completed?"checked":""}>
 </td>
 
-<td class="edit">
+<td class="edit" data-edit="${task.id}">
 <i class="fa-solid fa-pen"></i>
 </td>
 
-<td class="delete">
+<td class="delete" data-del="${task.id}">
 <i class="fa-solid fa-xmark"></i>
 </td>
 
 `
 
-taskTable.appendChild(row)
-
-row.querySelector("input").onclick=(e)=>{
-task.completed=e.target.checked
-save()
-render()
-}
-
-row.querySelector(".delete").onclick=()=>{
-task.deleted=true
-save()
-render()
-}
-
-row.querySelector(".edit").onclick=()=>{
-const newName=prompt("Edit task",task.name)
-if(newName){
-task.name=newName
-save()
-render()
-}
-}
+table.appendChild(tr)
 
 })
 
-analytics()
+dashboard()
+
 }
 
-document.getElementById("addTaskBtn").onclick=()=>{
 
-const name=taskInput.value.trim()
+document.getElementById("addBtn").onclick=()=>{
+
+const name=document.getElementById("taskName").value.trim()
 
 if(!name) return
 
 tasks.push({
 
+id:Date.now(),
+
 name,
-due:dueDate.value,
-category:categorySelect.value,
-priority:prioritySelect.value,
+
+due:document.getElementById("taskDate").value,
+
+category:document.getElementById("taskCategory").value,
+
+priority:document.getElementById("taskPriority").value,
+
 completed:false,
+
 deleted:false
 
 })
 
 save()
+
 render()
 
 }
 
-searchInput.oninput=render
+
+table.onclick=e=>{
+
+const id=e.target.dataset.check || 
+e.target.dataset.edit || 
+e.target.dataset.del
+
+if(!id) return
+
+const task=tasks.find(t=>t.id==id)
+
+if(e.target.dataset.check){
+
+task.completed=!task.completed
+
+}
+
+if(e.target.dataset.edit){
+
+const newName=prompt("Edit task",task.name)
+
+if(newName) task.name=newName
+
+}
+
+if(e.target.dataset.del){
+
+task.deleted=true
+
+}
+
+save()
+
+render()
+
+}
+
+
+search.oninput=render
 filterPriority.onchange=render
 filterCategory.onchange=render
-filterDone.onchange=render
+filterStatus.onchange=render
 
-document.getElementById("darkModeBtn").onclick=()=>{
+
+document.getElementById("darkBtn").onclick=()=>{
+
 document.body.classList.toggle("dark")
+
 }
+
 
 setInterval(()=>{
 
-tasks.forEach(task=>{
+const now=new Date()
 
-if(task.due && new Date(task.due)<new Date() && !task.completed){
+tasks.forEach(t=>{
 
-alert("Task overdue: "+task.name)
+if(t.due && new Date(t.due)<now && !t.completed && !t.alerted){
+
+alert("Task overdue: "+t.name)
+
+t.alerted=true
 
 }
 
 })
 
+save()
+
 },60000)
+
 
 render()
