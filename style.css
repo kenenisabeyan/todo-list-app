@@ -2,13 +2,13 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Poppins;
+  font-family: Arial;
 }
 
 body {
-  background: #f4f5f8;
+  background: #f4f6fb;
   padding: 30px;
-  transition: 0.3s;
+  transition: .3s;
 }
 
 body.dark {
@@ -27,11 +27,11 @@ header {
   margin-bottom: 20px;
 }
 
-#darkModeBtn {
+button {
   background: #6c4cff;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border-radius: 6px;
   cursor: pointer;
 }
@@ -39,44 +39,36 @@ header {
 input,
 select {
   padding: 10px;
-  border-radius: 6px;
   border: 1px solid #ddd;
-  margin-bottom: 10px;
+  border-radius: 6px;
 }
 
 .filters {
   display: flex;
   gap: 10px;
-  margin-bottom: 15px;
+  margin: 15px 0;
 }
 
-.input-section {
+.task-input {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr 1fr auto;
   gap: 10px;
   margin-bottom: 20px;
 }
 
-button {
-  background: #6c4cff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.analytics {
+.dashboard {
   display: flex;
   gap: 15px;
   margin-bottom: 20px;
 }
 
 .card {
-  background: white;
-  padding: 10px;
-  border-radius: 8px;
   flex: 1;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
   text-align: center;
+  font-weight: bold;
 }
 
 body.dark .card {
@@ -87,7 +79,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -107,6 +99,11 @@ td {
   border-bottom: 1px solid #eee;
 }
 
+.completed {
+  text-decoration: line-through;
+  opacity: .6;
+}
+
 .priority-high {
   color: red
 }
@@ -119,23 +116,18 @@ td {
   color: green
 }
 
-.completed td {
-  text-decoration: line-through;
-  opacity: 0.6;
-}
-
-.edit i {
-  cursor: pointer;
-}
-
-.delete i {
-  cursor: pointer;
+.delete {
   color: red;
+  cursor: pointer;
+}
+
+.edit {
+  cursor: pointer;
 }
 
 @media(max-width:768px) {
 
-  .input-section {
+  .task-input {
     grid-template-columns: 1fr;
   }
 
@@ -143,7 +135,7 @@ td {
     flex-direction: column;
   }
 
-  .analytics {
+  .dashboard {
     flex-direction: column;
   }
 
