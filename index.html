@@ -4,7 +4,7 @@
 <head>
 
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Task Manager</title>
 
@@ -19,35 +19,36 @@
   <div class="container">
 
     <header>
+
       <h1>Task Manager</h1>
-      <button id="darkBtn"><i class="fa-solid fa-moon"></i></button>
+
+      <button id="darkToggle">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+
     </header>
 
 
-    <!-- SEARCH -->
+    <input id="searchInput" placeholder="Search task...">
 
-    <input id="search" placeholder="Search task...">
-
-
-    <!-- FILTERS -->
 
     <div class="filters">
 
-      <select id="filterPriority">
+      <select id="priorityFilter">
         <option value="">Priority</option>
         <option>High</option>
         <option>Medium</option>
         <option>Low</option>
       </select>
 
-      <select id="filterCategory">
+      <select id="categoryFilter">
         <option value="">Category</option>
         <option>Study</option>
         <option>Work</option>
         <option>Personal</option>
       </select>
 
-      <select id="filterStatus">
+      <select id="statusFilter">
         <option value="">Status</option>
         <option value="true">Completed</option>
         <option value="false">Pending</option>
@@ -56,13 +57,11 @@
     </div>
 
 
-    <!-- ADD TASK -->
-
-    <div class="task-input">
+    <div class="task-form">
 
       <input id="taskName" placeholder="Enter task">
 
-      <input type="datetime-local" id="taskDate">
+      <input type="datetime-local" id="taskDue">
 
       <select id="taskCategory">
         <option>Study</option>
@@ -76,33 +75,23 @@
         <option>Low</option>
       </select>
 
-      <button id="addBtn">
+      <button id="addTask">
         <i class="fa-solid fa-plus"></i> Add
       </button>
 
     </div>
 
 
-    <!-- DASHBOARD -->
+    <div class="stats">
 
-    <div class="dashboard">
+      <div>Total <span id="totalTasks">0</span></div>
 
-      <div class="card">
-        Total <span id="total">0</span>
-      </div>
+      <div>Done <span id="doneTasks">0</span></div>
 
-      <div class="card">
-        Done <span id="done">0</span>
-      </div>
-
-      <div class="card">
-        Progress <span id="progress">0%</span>
-      </div>
+      <div>Progress <span id="progress">0%</span></div>
 
     </div>
 
-
-    <!-- TABLE -->
 
     <table>
 
