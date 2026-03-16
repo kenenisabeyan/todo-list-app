@@ -6,13 +6,13 @@
 }
 
 body {
-  background: #f4f6fb;
+  background: #f5f6fa;
   padding: 30px;
   transition: .3s;
 }
 
 body.dark {
-  background: #1e1e2f;
+  background: #1f1f2e;
   color: white;
 }
 
@@ -49,30 +49,30 @@ select {
   margin: 15px 0;
 }
 
-.task-input {
+.task-form {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr 1fr auto;
   gap: 10px;
   margin-bottom: 20px;
 }
 
-.dashboard {
+.stats {
   display: flex;
-  gap: 15px;
+  gap: 20px;
   margin-bottom: 20px;
 }
 
-.card {
+.stats div {
   flex: 1;
-  background: white;
+  background: #eee;
   padding: 15px;
   border-radius: 8px;
   text-align: center;
   font-weight: bold;
 }
 
-body.dark .card {
-  background: #2a2a3d;
+body.dark .stats div {
+  background: #2e2e42;
 }
 
 table {
@@ -84,14 +84,13 @@ table {
 }
 
 body.dark table {
-  background: #2a2a3d;
+  background: #2e2e42;
 }
 
 th {
-  background: #6c4cff;
+  background: linear-gradient(90deg, #6c4cff, #7c5cff);
   color: white;
   padding: 12px;
-  text-align: left;
 }
 
 td {
@@ -127,7 +126,7 @@ td {
 
 @media(max-width:768px) {
 
-  .task-input {
+  .task-form {
     grid-template-columns: 1fr;
   }
 
@@ -135,7 +134,7 @@ td {
     flex-direction: column;
   }
 
-  .dashboard {
+  .stats {
     flex-direction: column;
   }
 
