@@ -1,28 +1,21 @@
-const table=document.getElementById("taskTable")
+const table = document.getElementById("taskTable")
 
-const search=document.getElementById("search")
+const tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
-const filterPriority=document.getElementById("filterPriority")
-const filterCategory=document.getElementById("filterCategory")
-const filterStatus=document.getElementById("filterStatus")
-
-let tasks=JSON.parse(localStorage.getItem("tasks"))||[]
-
-const save=()=>localStorage.setItem("tasks",JSON.stringify(tasks))
+const save = () => localStorage.setItem("tasks", JSON.stringify(tasks))
 
 
-function dashboard(){
+function updateStats(){
 
-const total=tasks.filter(t=>!t.deleted).length
+const total = tasks.filter(t=>!t.deleted).length
+const done = tasks.filter(t=>t.completed && !t.deleted).length
 
-const done=tasks.filter(t=>t.completed && !t.deleted).length
+document.getElementById("totalTasks").textContent = total
+document.getElementById("doneTasks").textContent = done
 
-document.getElementById("total").textContent=total
-document.getElementById("done").textContent=done
+const percent = total ? Math.round(done/total*100) : 0
 
-const percent=total?Math.round(done/total*100):0
-
-document.getElementById("progress").textContent=percent+"%"
+document.getElementById("progress").textContent = percent + "%"
 
 }
 
@@ -31,37 +24,38 @@ function render(){
 
 table.innerHTML=""
 
-const filtered=tasks.filter(t=>{
+const search = document.getElementById("searchInput").value.toLowerCase()
+const pFilter = document.getElementById("priorityFilter").value
+const cFilter = document.getElementById("categoryFilter").value
+const sFilter = document.getElementById("statusFilter").value
+
+
+tasks
+.filter(task=>{
 
 return(
-
-!t.deleted &&
-
-(!filterPriority.value || t.priority===filterPriority.value) &&
-
-(!filterCategory.value || t.category===filterCategory.value) &&
-
-(!filterStatus.value || String(t.completed)===filterStatus.value) &&
-
-t.name.toLowerCase().includes(search.value.toLowerCase())
-
+!task.deleted &&
+(!pFilter || task.priority===pFilter) &&
+(!cFilter || task.category===cFilter) &&
+(!sFilter || String(task.completed)===sFilter) &&
+task.name.toLowerCase().includes(search)
 )
 
 })
 
-filtered.forEach((task,i)=>{
+.forEach((task,i)=>{
 
-const tr=document.createElement("tr")
+const tr = document.createElement("tr")
 
 if(task.completed) tr.classList.add("completed")
 
-tr.innerHTML=`
+tr.innerHTML = `
 
 <td>${i+1}</td>
 
 <td>${task.name}</td>
 
-<td>${task.due||""}</td>
+<td>${task.due || "-"}</td>
 
 <td>${task.category}</td>
 
@@ -87,111 +81,83 @@ table.appendChild(tr)
 
 })
 
-dashboard()
+updateStats()
 
 }
 
 
-document.getElementById("addBtn").onclick=()=>{
+document.getElementById("addTask").onclick = () => {
 
-const name=document.getElementById("taskName").value.trim()
+const name = document.getElementById("taskName").value.trim()
 
 if(!name) return
 
 tasks.push({
 
 id:Date.now(),
-
 name,
-
-due:document.getElementById("taskDate").value,
-
+due:document.getElementById("taskDue").value,
 category:document.getElementById("taskCategory").value,
-
 priority:document.getElementById("taskPriority").value,
-
 completed:false,
-
 deleted:false
 
 })
 
-save()
+document.getElementById("taskName").value=""
+document.getElementById("taskDue").value=""
 
+save()
 render()
 
 }
 
 
-table.onclick=e=>{
+table.onclick = (e)=>{
 
-const id=e.target.dataset.check || 
-e.target.dataset.edit || 
+const id = e.target.dataset.check ||
+e.target.dataset.edit ||
 e.target.dataset.del
 
 if(!id) return
 
-const task=tasks.find(t=>t.id==id)
+const task = tasks.find(t=>t.id==id)
 
 if(e.target.dataset.check){
 
-task.completed=!task.completed
+task.completed = !task.completed
 
 }
 
 if(e.target.dataset.edit){
 
-const newName=prompt("Edit task",task.name)
+const newName = prompt("Edit task",task.name)
 
-if(newName) task.name=newName
+if(newName) task.name = newName
 
 }
 
 if(e.target.dataset.del){
 
-task.deleted=true
+task.deleted = true
 
 }
 
 save()
-
 render()
 
 }
 
 
-search.oninput=render
-filterPriority.onchange=render
-filterCategory.onchange=render
-filterStatus.onchange=render
+document.getElementById("searchInput").oninput = render
+document.getElementById("priorityFilter").onchange = render
+document.getElementById("categoryFilter").onchange = render
+document.getElementById("statusFilter").onchange = render
 
 
-document.getElementById("darkBtn").onclick=()=>{
-
+document.getElementById("darkToggle").onclick = () => {
 document.body.classList.toggle("dark")
-
 }
-
-
-setInterval(()=>{
-
-const now=new Date()
-
-tasks.forEach(t=>{
-
-if(t.due && new Date(t.due)<now && !t.completed && !t.alerted){
-
-alert("Task overdue: "+t.name)
-
-t.alerted=true
-
-}
-
-})
-
-save()
-
-},60000)
 
 
 render()
