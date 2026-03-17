@@ -112,6 +112,7 @@ body.dark #searchInput {
   padding: 1.5rem;
   border-radius: 2rem;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  align-items: center;
 }
 
 body.dark .input-section {
@@ -140,23 +141,49 @@ body.dark .input-section>* {
   box-shadow: 0 0 0 3px rgba(59, 59, 255, 0.15);
 }
 
-.input-section button {
-  background: #3b3bff;
-  color: white;
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1 1 200px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 0.8rem 1rem;
   border: none;
+  border-radius: 1.5rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
-  flex: 1 1 120px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.input-section button:hover,
-.input-section button:focus-visible {
+#addTaskBtn {
+  background: #3b3bff;
+  color: white;
+}
+
+#addTaskBtn:hover,
+#addTaskBtn:focus-visible {
   background: #2222cc;
   outline: 2px solid #ffbf47;
 }
 
-.input-section button:active {
+.cancel-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover,
+.cancel-btn:focus-visible {
+  background: #5a6268;
+  outline: 2px solid #ffbf47;
+}
+
+.button-group button:active {
   transform: scale(0.98);
 }
 
