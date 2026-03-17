@@ -1,10 +1,12 @@
 (function() {
+  // ----- DOM elements -----
   const taskInput = document.getElementById('taskInput');
   const startTime = document.getElementById('startTime');
   const endTime = document.getElementById('endTime');
   const categorySelect = document.getElementById('categorySelect');
   const prioritySelect = document.getElementById('prioritySelect');
   const addBtn = document.getElementById('addTaskBtn');
+  const cancelBtn = document.getElementById('cancelEditBtn');
   const taskTable = document.getElementById('taskTable');
   const searchInput = document.getElementById('searchInput');
   const progressFill = document.getElementById('progressFill');
@@ -12,31 +14,32 @@
   const liveRegion = document.getElementById('liveRegion');
   const darkModeBtn = document.getElementById('darkModeBtn');
 
-
+  // ----- state -----
   let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  let editingIndex = null; // index of task being edited, or null
 
+  // ----- helper: announce to screen readers -----
   function announce(message) {
     liveRegion.textContent = message;
   }
 
-  // save to localStorage 
+  // ----- save to localStorage -----
   function saveTasks() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }
 
-  // update progress bar and ARIA attributes 
+  // ----- update progress bar and ARIA attributes -----
   function updateProgress() {
     const doneCount = tasks.filter(t => t.completed).length;
     const percent = tasks.length === 0 ? 0 : Math.round((doneCount / tasks.length) * 100);
     progressFill.style.width = percent + '%';
     progressText.textContent = percent + '% completed';
 
-    // Update ARIA on progress container
     const progressBar = document.querySelector('.progress-bar');
     progressBar.setAttribute('aria-valuenow', percent);
   }
 
-  // escape HTML to prevent XSS
+  // ----- escape HTML to prevent XSS -----
   function escapeHTML(str) {
     if (!str) return '';
     return String(str).replace(/[&<>"]/g, function(match) {
@@ -48,7 +51,30 @@
     });
   }
 
-  // render table based on search filter 
+  // ----- reset form to empty, hide cancel, set add button text -----
+  function resetForm() {
+    taskInput.value = '';
+    startTime.value = '';
+    endTime.value = '';
+    categorySelect.value = 'Study';   // default, adjust as needed
+    prioritySelect.value = 'Medium';
+    addBtn.innerHTML = '<i class="fa-solid fa-plus" aria-hidden="true"></i> Add';
+    cancelBtn.style.display = 'none';
+    editingIndex = null;
+  }
+
+  // ----- fill form with task data for editing -----
+  function fillFormForEdit(task) {
+    taskInput.value = task.name || '';
+    startTime.value = task.start || '';
+    endTime.value = task.end || '';
+    categorySelect.value = task.category || 'Study';
+    prioritySelect.value = task.priority || 'Medium';
+    addBtn.innerHTML = '<i class="fa-solid fa-pen" aria-hidden="true"></i> Update';
+    cancelBtn.style.display = 'inline-flex';
+  }
+
+  // ----- render table based on search filter -----
   function render() {
     const searchTerm = searchInput.value.trim().toLowerCase();
     const filteredTasks = tasks.filter(t => t.name.toLowerCase().includes(searchTerm));
@@ -90,23 +116,35 @@
 
         const editBtn = row.querySelector('.edit-btn');
         editBtn.addEventListener('click', () => {
-          const newName = prompt('Edit task name', task.name);
-          if (newName && newName.trim() !== '') {
-            task.name = newName.trim();
-            saveTasks();
-            render();
-            announce('Task updated');
+          // Find the actual index in the full tasks array (not filtered)
+          const actualIndex = tasks.findIndex(t => 
+            t.name === task.name && 
+            t.start === task.start && 
+            t.end === task.end && 
+            t.category === task.category && 
+            t.priority === task.priority
+          );
+          if (actualIndex !== -1) {
+            editingIndex = actualIndex;
+            fillFormForEdit(task);
           }
         });
 
         const deleteBtn = row.querySelector('.delete-btn');
         deleteBtn.addEventListener('click', () => {
-          const taskIndex = tasks.findIndex(t => t.name === task.name && t.start === task.start && t.end === task.end);
-          if (taskIndex !== -1) {
-            tasks.splice(taskIndex, 1);
+          const actualIndex = tasks.findIndex(t => 
+            t.name === task.name && 
+            t.start === task.start && 
+            t.end === task.end && 
+            t.category === task.category && 
+            t.priority === task.priority
+          );
+          if (actualIndex !== -1) {
+            tasks.splice(actualIndex, 1);
             saveTasks();
             render();
             announce('Task deleted');
+            if (editingIndex === actualIndex) resetForm(); // if editing was this task, reset
           }
         });
 
@@ -117,40 +155,51 @@
     updateProgress();
   }
 
-  // add new task 
-  function addTask() {
+  // ----- add or update task -----
+  function addOrUpdateTask() {
     const name = taskInput.value.trim();
     if (!name) {
       alert('Please enter a task name');
       return;
     }
 
-    tasks.push({
+    const taskData = {
       name: name,
       start: startTime.value,
       end: endTime.value,
       category: categorySelect.value,
       priority: prioritySelect.value,
       completed: false
-    });
+    };
 
-    // Clear inputs
-    taskInput.value = '';
-    startTime.value = '';
-    endTime.value = '';
-    // Keep category/priority as is
+    if (editingIndex !== null) {
+      // Preserve completed status from original task
+      taskData.completed = tasks[editingIndex].completed;
+      tasks[editingIndex] = taskData;
+      announce('Task updated');
+    } else {
+      tasks.push(taskData);
+      announce('Task added');
+    }
 
     saveTasks();
+    resetForm();
     render();
-    announce('Task added');
     taskInput.focus();
   }
 
-  addBtn.addEventListener('click', addTask);
+  // ----- event listeners -----
+  addBtn.addEventListener('click', addOrUpdateTask);
+
+  cancelBtn.addEventListener('click', () => {
+    resetForm();
+    announce('Edit cancelled');
+  });
+
   taskInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      addTask();
+      addOrUpdateTask();
     }
   });
 
@@ -188,4 +237,7 @@
   } else {
     darkModeBtn.setAttribute('aria-pressed', 'false');
   }
+
+  // hide cancel button initially
+  cancelBtn.style.display = 'none';
 })();
