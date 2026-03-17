@@ -9,9 +9,6 @@ This app allows users to efficiently manage tasks with features like time tracki
 
 <img width="937" height="981" alt="image" src="https://github.com/user-attachments/assets/e5763805-730b-41eb-824c-12318020a76d" />
 
-
-> *(Replace `screenshot.png` with your actual screenshot file)*
-
 ---
 
 ## ✨ Features
@@ -60,30 +57,30 @@ This app allows users to efficiently manage tasks with features like time tracki
 
 ---
 
-
-
 ## 📂 Project Structure
-accessible-task-manager/
+
+todo-list-app/
 │
-├── index.html # Main HTML file
-├── style.css # Styling and layout
-├── script.js # Application logic
-├── screenshot.png # App preview image (optional)
-└── README.md # Project documentation
+├── index.html          # Main HTML file
+├── style.css           # Styling and layout
+├── script.js           # Application logic
+├── screenshot.png      # App preview image (optional)
+└── README.md           # Project documentation
+
 
 
 ---
 
 ## ⚙️ Getting Started
 
-### 🌐 Run Locally
+### 🌐 Run Locall
 Simply open `index.html` in any modern browser.
 
 ### 💻 Installation
 
 ```bash
-git clone https://github.com/yourusername/accessible-task-manager.git
-cd accessible-task-manager
+git clone https://github.com/yourusername/todo-list-app.git
+cd todo-list-app
 
 Then open:
 index.html
