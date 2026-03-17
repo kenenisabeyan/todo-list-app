@@ -2,122 +2,90 @@
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Task Manager</title>
-
-  <link rel="stylesheet" href="style.css">
-
+  <title>Accessible Task Manager</title>
+  <!-- Google Font & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
   <div class="container">
-
     <header>
-
-      <h1>Task Manager</h1>
-
-      <button id="darkToggle">
-        <i class="fa-solid fa-moon"></i>
+      <h1>📋 Task Manager</h1>
+      <button id="darkModeBtn" aria-pressed="false">
+        <i class="fa-solid fa-moon" aria-hidden="true"></i>
+        <span>Dark mode</span>
       </button>
-
     </header>
 
-
-    <input id="searchInput" placeholder="Search task...">
-
-
-    <div class="filters">
-
-      <select id="priorityFilter">
-        <option value="">Priority</option>
-        <option>High</option>
-        <option>Medium</option>
-        <option>Low</option>
-      </select>
-
-      <select id="categoryFilter">
-        <option value="">Category</option>
-        <option>Study</option>
-        <option>Work</option>
-        <option>Personal</option>
-      </select>
-
-      <select id="statusFilter">
-        <option value="">Status</option>
-        <option value="true">Completed</option>
-        <option value="false">Pending</option>
-      </select>
-
+    <!-- Search -->
+    <div class="search-section">
+      <label for="searchInput">Search tasks</label>
+      <input type="search" id="searchInput" placeholder="Search tasks... (e.g. 'work')">
     </div>
 
-
-    <div class="task-form">
-
-      <input id="taskName" placeholder="Enter task">
-
-      <input type="datetime-local" id="taskDue">
-
-      <select id="taskCategory">
-        <option>Study</option>
-        <option>Work</option>
-        <option>Personal</option>
+    <!-- Add task form -->
+    <div class="input-section" role="group" aria-label="Add new task">
+      <input type="text" id="taskInput" placeholder="Task name" aria-label="Task name">
+      <input type="time" id="startTime" aria-label="Start time" placeholder="Start time">
+      <input type="time" id="endTime" aria-label="End time" placeholder="End time">
+      <select id="categorySelect" aria-label="Category">
+        <option value="Study">Study</option>
+        <option value="Work">Work</option>
+        <option value="Personal">Personal</option>
       </select>
-
-      <select id="taskPriority">
-        <option>High</option>
-        <option>Medium</option>
-        <option>Low</option>
+      <select id="prioritySelect" aria-label="Priority" aria-placeholder="Priority">
+        <option value="High">High</option>
+        <option value="Medium" selected>Medium</option>
+        <option value="Low">Low</option>
       </select>
-
-      <button id="addTask">
-        <i class="fa-solid fa-plus"></i> Add
+      <button id="addTaskBtn" aria-label="Add task">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i> Add
       </button>
-
     </div>
 
-
-    <div class="stats">
-
-      <div>Total <span id="totalTasks">0</span></div>
-
-      <div>Done <span id="doneTasks">0</span></div>
-
-      <div>Progress <span id="progress">0%</span></div>
-
+    <!-- Progress bar -->
+    <div class="progress-section">
+      <div class="progress-label">
+        <span id="progressText">0% completed</span>
+        <span>Overall progress</span>
+      </div>
+      <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
+        aria-labelledby="progressText">
+        <div id="progressFill"></div>
+      </div>
     </div>
 
+    <!-- Task table -->
+    <div class="table-wrapper" tabindex="0" aria-label="Task list">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Task</th>
+            <th scope="col">Time</th>
+            <th scope="col">Category</th>
+            <th scope="col">Priority</th>
+            <th scope="col">Done</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody id="taskTable"></tbody>
+      </table>
+    </div>
 
-    <table>
-
-      <thead>
-
-        <tr>
-          <th>#</th>
-          <th>Task</th>
-          <th>Due</th>
-          <th>Category</th>
-          <th>Priority</th>
-          <th>Done</th>
-          <th>Edit</th>
-          <th>Exit</th>
-        </tr>
-
-      </thead>
-
-      <tbody id="taskTable"></tbody>
-
-    </table>
-
+    <!-- Live region for screen readers -->
+    <div class="sr-only" aria-live="polite" id="liveRegion"></div>
   </div>
 
   <script src="script.js"></script>
-
 </body>
 
 </html>
