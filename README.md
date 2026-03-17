@@ -1,93 +1,68 @@
-# My Todo List
+# 📋Accessible Task Manager/Todo-List
 
-A modern **Todo List web application** built with **HTML5, CSS3, and Vanilla JavaScript**.  
-This project demonstrates practical **DOM manipulation, localStorage usage, and responsive UI design** while keeping the code simple and maintainable.
-
----
-
-## Features
-
-### Core Functionality
-- Add new tasks
-- Mark tasks as completed
-- Delete tasks
-- Real-time task updates
-- Persistent storage using **localStorage**
-
-### User Experience
-- Clean and modern interface
-- Empty state message when no tasks exist
-- Smooth UI interactions
-- Keyboard support (Enter to add tasks)
-- Responsive layout for mobile and desktop
+A modern, fully accessible **Task Management Web Application** built using **HTML, CSS, and Vanilla JavaScript**.  
+This app allows users to efficiently manage tasks with features like time tracking, categories, priorities, and completion status — all stored locally in the browser using `localStorage`.
 
 ---
 
-## Technologies Used
+## 📸 Preview
 
-- **HTML5** – Application structure  
-- **CSS3** – Styling, layout, and animations  
-- **Vanilla JavaScript** – Application logic  
-- **Web Storage API (localStorage)** – Data persistence  
+![App Screenshot](./screenshot.png)
 
-No frameworks or external libraries are used.
+> *(Replace `screenshot.png` with your actual screenshot file)*
 
 ---
 
-## Project Structure
+## ✨ Features
 
-```
-todo-app/
-│
-├── index.html
-├── style.css
-├── script.js
-└── README.md
-```
-
----
-
-## Installation
-
-Clone the repository and open the project in your browser.
-
-```bash
-git clone https://github.com/kenenisabeyan/todo-list-app.git
-cd todo-list-app
-open index.html
-```
-
-Or run with **VS Code Live Server**.
+### 📝 Task Management
+- Add tasks with:
+  - Name
+  - Start & End time
+  - Category (Study / Work / Personal)
+  - Priority (High / Medium / Low)
+- Edit any task field
+- Mark tasks as completed (with strikethrough)
+- Delete tasks permanently
 
 ---
 
-## Usage
-
-1. Enter a task in the input field  
-2. Click **Add Task** or press **Enter**  
-3. Click a task to mark it as completed  
-4. Right-click or use the delete option to remove a task  
-
-Tasks are automatically saved in **localStorage**, so they remain after refreshing the page.
+### 🔍 Productivity Tools
+- 🔎 Real-time search/filter by task name  
+- 📊 Progress bar showing completion percentage  
+- 🌙 Dark mode toggle (saved in `localStorage`)  
+- 💾 Persistent storage (tasks remain after refresh)  
 
 ---
 
-## Future Improvements
-
-- Edit existing tasks
-- Drag & drop task reordering
-- Task categories and filters
-- Due dates and reminders
+### 🎯 User Experience
+- ⚡ Instant UI updates  
+- 🎨 Clean, modern responsive design  
+- 📱 Works on mobile, tablet, and desktop  
 
 ---
 
-## Author
-
-**Kenenisa Beyan**  
-Full Stack Developer  
-
-GitHub: https://github.com/kenenisabeyan
+### ♿ Accessibility (WCAG Friendly)
+- Semantic HTML (`<header>`, `<main>`, `<table>`, etc.)  
+- ARIA attributes (`aria-label`, `aria-live`, `role="progressbar"`)  
+- Full keyboard navigation support  
+- Screen reader announcements for actions  
+- High contrast UI (light & dark mode)  
+- Visible focus indicators  
 
 ---
 
-⭐ If you like this project, consider **starring the repository**.
+## 🛠️ Technologies Used
+
+- **HTML5** – Semantic structure  
+- **CSS3** – Flexbox, Grid, animations, custom properties  
+- **Vanilla JavaScript (ES6)** – Core logic  
+- **localStorage** – Data persistence  
+- **Font Awesome** – Icons  
+- **Google Fonts (Inter)** – Typography  
+
+> ⚡ No frameworks or libraries used (pure JavaScript)
+
+---
+
+## 📂 Project Structure
