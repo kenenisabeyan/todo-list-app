@@ -1,0 +1,353 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f8fafc;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+  transition: background 0.3s, color 0.3s;
+  line-height: 1.5;
+}
+
+body.dark {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+.container {
+  width: 100%;
+  max-width: 1300px;
+}
+
+/* header */
+header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+body.dark h1 {
+  color: #f1f5f9;
+}
+
+/* dark mode toggle button */
+#darkModeBtn {
+  background: #3b3bff;
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+}
+
+#darkModeBtn:hover,
+#darkModeBtn:focus-visible {
+  background: #2222cc;
+  outline: 2px solid #ffbf47;
+  outline-offset: 2px;
+}
+
+/* search */
+.search-section {
+  margin-bottom: 1.5rem;
+}
+
+.search-section label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 2rem;
+  font-size: 1rem;
+  background: white;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+body.dark #searchInput {
+  background: #2a2a2a;
+  border-color: #4b5563;
+  color: #f1f5f9;
+}
+
+#searchInput:focus {
+  outline: none;
+  border-color: #3b3bff;
+  box-shadow: 0 0 0 3px rgba(59, 59, 255, 0.2);
+}
+
+/* task input row */
+.input-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  align-items: center;
+}
+
+body.dark .input-section {
+  background: #1e1e2d;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.input-section>* {
+  flex: 1 1 140px;
+  padding: 0.8rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 1.5rem;
+  font-size: 0.95rem;
+  background: white;
+}
+
+body.dark .input-section>* {
+  background: #2a2a3a;
+  border-color: #4a4a60;
+  color: #f1f5f9;
+}
+
+.input-section>*:focus {
+  outline: none;
+  border-color: #3b3bff;
+  box-shadow: 0 0 0 3px rgba(59, 59, 255, 0.15);
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1 1 200px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: none;
+  border-radius: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+#addTaskBtn {
+  background: #3b3bff;
+  color: white;
+}
+
+#addTaskBtn:hover,
+#addTaskBtn:focus-visible {
+  background: #2222cc;
+  outline: 2px solid #ffbf47;
+}
+
+.cancel-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover,
+.cancel-btn:focus-visible {
+  background: #5a6268;
+  outline: 2px solid #ffbf47;
+}
+
+.button-group button:active {
+  transform: scale(0.98);
+}
+
+/* progress */
+.progress-section {
+  margin-bottom: 2rem;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+  height: 1.2rem;
+  background: #e2e8f0;
+  border-radius: 2rem;
+  overflow: hidden;
+}
+
+body.dark .progress-bar {
+  background: #374151;
+}
+
+#progressFill {
+  height: 100%;
+  width: 0%;
+  background: #3b3bff;
+  transition: width 0.3s ease;
+  border-radius: 2rem;
+}
+
+/* table */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 1.5rem;
+  background: white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+body.dark .table-wrapper {
+  background: #1e1e2d;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+th {
+  background: #3b3bff;
+  color: white;
+  font-weight: 600;
+  padding: 1rem 0.8rem;
+  text-align: left;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+th:first-child {
+  border-radius: 1.5rem 0 0 0;
+}
+
+th:last-child {
+  border-radius: 0 1.5rem 0 0;
+}
+
+td {
+  padding: 1rem 0.8rem;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+}
+
+body.dark td {
+  border-bottom-color: #334155;
+}
+
+/* priority badges */
+.priority {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 2rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+}
+
+.high {
+  background: #ef4444;
+}
+
+.medium {
+  background: #f97316;
+}
+
+.low {
+  background: #10b981;
+}
+
+/* completed row */
+.completed td {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* action buttons inside table */
+.action-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  border-radius: 1rem;
+  color: #4b5563;
+  transition: background 0.2s, color 0.2s;
+}
+
+.action-btn:hover,
+.action-btn:focus-visible {
+  background: #e2e8f0;
+  color: #111;
+  outline: 2px solid #ffbf47;
+}
+
+body.dark .action-btn {
+  color: #cbd5e1;
+}
+
+body.dark .action-btn:hover,
+body.dark .action-btn:focus-visible {
+  background: #4b5563;
+  color: white;
+}
+
+.delete-btn:hover,
+.delete-btn:focus-visible {
+  color: #dc2626;
+}
+
+/* checkbox */
+.done-checkbox {
+  width: 1.3rem;
+  height: 1.3rem;
+  cursor: pointer;
+  accent-color: #3b3bff;
+}
+
+/* live region for screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+}
+
+/* focus outline for all interactive */
+:focus-visible {
+  outline: 2px solid #ffbf47;
+  outline-offset: 2px;
+}
