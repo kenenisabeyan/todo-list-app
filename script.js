@@ -14,9 +14,14 @@
   const liveRegion = document.getElementById('liveRegion');
   const darkModeBtn = document.getElementById('darkModeBtn');
 
+  // ----- Helper: generate unique ID -----
+  function generateId() {
+    return crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+  }
+
   // ----- state -----
   let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-  let editingIndex = null; // index of task being edited, or null
+  let editingId = null; // id of task being edited, or null
 
   // ----- helper: announce to screen readers -----
   function announce(message) {
@@ -56,11 +61,11 @@
     taskInput.value = '';
     startTime.value = '';
     endTime.value = '';
-    categorySelect.value = 'Study';   // default, adjust as needed
+    categorySelect.value = 'Study';
     prioritySelect.value = 'Medium';
     addBtn.innerHTML = '<i class="fa-solid fa-plus" aria-hidden="true"></i> Add';
     cancelBtn.style.display = 'none';
-    editingIndex = null;
+    editingId = null;
   }
 
   // ----- fill form with task data for editing -----
@@ -101,8 +106,8 @@
           <td>${escapeHTML(task.category)}</td>
           <td><span class="priority ${task.priority.toLowerCase()}">${escapeHTML(task.priority)}</span></td>
           <td><input type="checkbox" class="done-checkbox" ${task.completed ? 'checked' : ''} aria-label="Mark '${escapeHTML(task.name)}' as done"></td>
-          <td><button class="action-btn edit-btn" aria-label="Edit task: ${escapeHTML(task.name)}"><i class="fa-solid fa-pen" aria-hidden="true"></i></button></td>
-          <td><button class="action-btn delete-btn" aria-label="Delete task: ${escapeHTML(task.name)}"><i class="fa-solid fa-trash" aria-hidden="true"></i></button></td>
+          <td><button class="action-btn edit-btn" data-id="${task.id}" aria-label="Edit task: ${escapeHTML(task.name)}"><i class="fa-solid fa-pen" aria-hidden="true"></i></button></td>
+          <td><button class="action-btn delete-btn" data-id="${task.id}" aria-label="Delete task: ${escapeHTML(task.name)}"><i class="fa-solid fa-trash" aria-hidden="true"></i></button></td>
         `;
 
         // Attach event listeners
@@ -110,42 +115,28 @@
         checkbox.addEventListener('change', (e) => {
           task.completed = e.target.checked;
           saveTasks();
-          render();
+          render(); // re-render to update class and progress
           announce(task.completed ? 'Task marked done' : 'Task reopened');
         });
 
         const editBtn = row.querySelector('.edit-btn');
         editBtn.addEventListener('click', () => {
-          // Find the actual index in the full tasks array (not filtered)
-          const actualIndex = tasks.findIndex(t => 
-            t.name === task.name && 
-            t.start === task.start && 
-            t.end === task.end && 
-            t.category === task.category && 
-            t.priority === task.priority
-          );
-          if (actualIndex !== -1) {
-            editingIndex = actualIndex;
-            fillFormForEdit(task);
+          const id = editBtn.dataset.id;
+          const taskToEdit = tasks.find(t => t.id === id);
+          if (taskToEdit) {
+            editingId = id;
+            fillFormForEdit(taskToEdit);
           }
         });
 
         const deleteBtn = row.querySelector('.delete-btn');
         deleteBtn.addEventListener('click', () => {
-          const actualIndex = tasks.findIndex(t => 
-            t.name === task.name && 
-            t.start === task.start && 
-            t.end === task.end && 
-            t.category === task.category && 
-            t.priority === task.priority
-          );
-          if (actualIndex !== -1) {
-            tasks.splice(actualIndex, 1);
-            saveTasks();
-            render();
-            announce('Task deleted');
-            if (editingIndex === actualIndex) resetForm(); // if editing was this task, reset
-          }
+          const id = deleteBtn.dataset.id;
+          tasks = tasks.filter(t => t.id !== id);
+          saveTasks();
+          render();
+          announce('Task deleted');
+          if (editingId === id) resetForm(); // if editing this task, reset form
         });
 
         taskTable.appendChild(row);
@@ -172,12 +163,18 @@
       completed: false
     };
 
-    if (editingIndex !== null) {
-      // Preserve completed status from original task
-      taskData.completed = tasks[editingIndex].completed;
-      tasks[editingIndex] = taskData;
-      announce('Task updated');
+    if (editingId !== null) {
+      // Update existing task
+      const index = tasks.findIndex(t => t.id === editingId);
+      if (index !== -1) {
+        taskData.completed = tasks[index].completed; // preserve completion status
+        taskData.id = editingId; // keep same id
+        tasks[index] = taskData;
+        announce('Task updated');
+      }
     } else {
+      // Add new task with unique id
+      taskData.id = generateId();
       tasks.push(taskData);
       announce('Task added');
     }
